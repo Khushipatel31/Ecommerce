@@ -24,7 +24,7 @@ const CheckOutSteps = ({ activeStep }) => {
     <>
       <Stepper alternativeLabel activeStep={activeStep} >
         {steps.map((item, index) => (
-          <Step key={index} active={activeStep === index}>
+          <Step key={index} >
             <StepLabel icon={item.icon}>
               <span style={{ color: activeStep >= index ? "tomato" : "inherit" }}>
                 {item.label}

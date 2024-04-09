@@ -1,6 +1,7 @@
 import './App.css';
 import WebFont from "webfontloader";
-import { useEffect } from 'react';
+import axios from "axios";
+import { useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Dashboard from './Components/Dashboard/Dashboard';
 import Contact from './Components/Contact/Contact';
@@ -15,6 +16,7 @@ import ForgotPassword from './Components/User/ForgotPassword';
 import ResetPassword from './Components/User/ResetPassword';
 import Cart from './Components/Cart/Cart';
 import Shipping from './Components/Cart/Shipping';
+import ConfirmOrder from './Components/Cart/ConfirmOrder';
 const routes = createBrowserRouter([
   {
     path: "/",
@@ -76,6 +78,10 @@ const routes = createBrowserRouter([
       {
         path:"/shipping",
         element:<Shipping/>
+      },
+      {
+        path:"/order/confirm",
+        element:<ConfirmOrder/>
       }
     ]
   },
@@ -85,7 +91,16 @@ const routes = createBrowserRouter([
 
 
 const App = () => {
+
+  const [stripeApiKey,setStripeApiKey]=useState("");
+
+  const getStripeApiKey=async ()=>{
+    const data= await axios.get("/api/v1/stripeapikey");
+    setStripeApiKey(data.stripeApiKey);
+  }
+
   useEffect(() => {
+    getStripeApiKey();
     WebFont.load({
       google: {
         families: ["Roboto", "Droid Sans", "Chilanka"],

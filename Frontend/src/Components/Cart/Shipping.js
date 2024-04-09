@@ -31,7 +31,7 @@ const Shipping = () => {
     };
     dispatch(saveShippingInfo(formData));
     setSubmitting(false);
-    // window.location.replace("/order/confirm");
+    window.location.replace("/order/confirm");
   };
 
   return (

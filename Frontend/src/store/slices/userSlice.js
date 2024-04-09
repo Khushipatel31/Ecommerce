@@ -36,16 +36,16 @@ const userSlice = createSlice({
             user: {},
           };
         case LOGIN_SUCCESS:
-          const { id, token, createdAt, email, name, profile, role } = action.payload.data.user;
+          const { id, createdAt, email, name, profile, role } = action.payload.data.user;
           const user = {
             id,
-            token,
             createdAt,
             email,
             name,
             profileUrl: profile[0].url,
             role,
           };
+          const token=action.payload.data.token;
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(user));
           return {
