@@ -17,99 +17,105 @@ import ResetPassword from './Components/User/ResetPassword';
 import Cart from './Components/Cart/Cart';
 import Shipping from './Components/Cart/Shipping';
 import ConfirmOrder from './Components/Cart/ConfirmOrder';
-const routes = createBrowserRouter([
-  {
-    path: "/",
-    element: <Dashboard />,
-    children:[
-      {
-        index:true,
-        element: <Home />,
-      },
-      {
-        path: "contact",
-        element: <Contact />,
-      },
-      {
-        path: "cart",
-        element: <Cart />,
-      },
-      {
-        path: "account",
-        element: <Account />,
-      },
-      {
-        path: "me/update",
-        element: <Update />,
-      },{
-        path:"/password/update",
-        element:<UpdatePassword/>
-      },
-      {
-        path:"/password/forgot",
-        element:<ForgotPassword/>
-      },
-      {
-        path:"/password/reset/:token",
-        element:<ResetPassword/>
-      },
-      {
-        path:"login",
-        element:<LoginSignup/>
-      },
-      {
-        path: "products",
-        element: <Products />,
-        children:[
-          {
-            index:true,
-            element:<Products/>
-          },
-          {
-            path: ":keyword", 
-            element: <Products/>
-          }
-        ]
-      },
-      {
-        path:"/product/:id",
-        element:<ProductDetails/>
-      },
-      {
-        path:"/shipping",
-        element:<Shipping/>
-      },
-      {
-        path:"/order/confirm",
-        element:<ConfirmOrder/>
-      }
-    ]
-  },
-
- 
-]);
+import Payment from './Components/Cart/Payment';
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 
 const App = () => {
+  
+  const [stripeApiKey, setStripeApiKey] = useState("");
+  const routes = createBrowserRouter([
+    {
+      path: "/",
+      element: <Dashboard />,
+      children: [
+        {
+          index: true,
+          element: <Home />,
+        },
+        {
+          path: "contact",
+          element: <Contact />,
+        },
+        {
+          path: "cart",
+          element: <Cart />,
+        },
+        {
+          path: "account",
+          element: <Account />,
+        },
+        {
+          path: "me/update",
+          element: <Update />,
+        }, {
+          path: "/password/update",
+          element: <UpdatePassword />
+        },
+        {
+          path: "/password/forgot",
+          element: <ForgotPassword />
+        },
+        {
+          path: "/password/reset/:token",
+          element: <ResetPassword />
+        },
+        {
+          path: "login",
+          element: <LoginSignup />
+        },
+        {
+          path: "products",
+          element: <Products />,
+          children: [
+            {
+              index: true,
+              element: <Products />
+            },
+            {
+              path: ":keyword",
+              element: <Products />
+            }
+          ]
+        },
+        {
+          path: "/product/:id",
+          element: <ProductDetails />
+        },
+        {
+          path: "/shipping",
+          element: <Shipping />
+        },
+        {
+          path: "/order/confirm",
+          element: <ConfirmOrder />
+        },
+        {
+          path: "/process/payment",
+          element: (
+            <Elements stripe={loadStripe(stripeApiKey)}>
+              <Payment />
+            </Elements>
+          )
+        }
+      ]
+    },
 
-  const [stripeApiKey,setStripeApiKey]=useState("");
 
-  const getStripeApiKey=async ()=>{
-    const data= await axios.get("/api/v1/stripeapikey");
-    setStripeApiKey(data.stripeApiKey);
+  ]);
+
+  const getStripeApiKey = async () => {
+    const response = await axios.get("/api/v1/stripeapikey");
+    setStripeApiKey(response.data.stripeApiKey);
   }
 
   useEffect(() => {
     getStripeApiKey();
-    WebFont.load({
-      google: {
-        families: ["Roboto", "Droid Sans", "Chilanka"],
-      }
-    }, [])
   })
   return (
     <RouterProvider router={routes}></RouterProvider>
-    
+
   );
 }
 

@@ -9,6 +9,21 @@ exports.processPayment = catchAsyncErrors(async (req, res, next) => {
     metadata: {
       company: "Ecommerce",
     },
+    // automatic_payment_methods: {
+    //   enabled: true,
+    // },
+    // shipping:{
+    //   name: 'Jane Doe',
+    //   address: {
+    //     line1: "shippingInfo.address",
+    //     line2:"abc",
+    //     city: "shippingInfo.city",
+    //     state: "",
+    //     postal_code:"123456",
+    //     country:"IN",
+    //   }
+    // },
+    description:"abc"
   });
 
   res
