@@ -3,13 +3,15 @@ import {thunk} from 'redux-thunk';
 import { combineReducers } from "redux";
 import productSlice from "./slices/productSlice";
 import productDetailsSlice from "./slices/productDetailsSlice";
+import orderSlice from "./slices/orderSlice";
 import userSlice from "./slices/userSlice";
 import cart from "./slices/cart";
 const rootReducer = combineReducers({
   productSlice: productSlice,
   productDetailsSlice:productDetailsSlice,
   userSlice:userSlice,
-  cartSlice:cart
+  cartSlice:cart,
+  newOrderSlice:orderSlice
 });
 
 const store = configureStore({

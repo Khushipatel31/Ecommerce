@@ -18,6 +18,7 @@ import Cart from './Components/Cart/Cart';
 import Shipping from './Components/Cart/Shipping';
 import ConfirmOrder from './Components/Cart/ConfirmOrder';
 import Payment from './Components/Cart/Payment';
+import OrderSuccess from './Components/Cart/OrderSuccess';
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
@@ -98,11 +99,13 @@ const App = () => {
               <Payment />
             </Elements>
           )
-        }
+        },
+        {
+          path: "/success",
+          element: <OrderSuccess />
+        },
       ]
     },
-
-
   ]);
 
   const getStripeApiKey = async () => {

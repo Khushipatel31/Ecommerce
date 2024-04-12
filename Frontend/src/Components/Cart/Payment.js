@@ -1,6 +1,6 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import CheckoutSteps from "./CheckOutSteps";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../Layouts/MetaData";
 import { Typography } from "@material-ui/core";
 import {
@@ -11,16 +11,19 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import axios from "axios";
+import { clearErrors,createOrder } from "../../actions/orderAction";
 import CreditCardIcon from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
-const Swal = require('sweetalert2');
+const Swal = require("sweetalert2");
 
 const Payment = () => {
   const stripe = useStripe();
   const elements = useElements();
+  const dispatch = useDispatch();
   const { shippingInfo, cartItems } = useSelector((state) => state.cartSlice);
   const { user } = useSelector((state) => state.userSlice);
+  const { error } = useSelector((state) => state.newOrderSlice);
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
   const payBtn = useRef(null);
   const paymentData = {
@@ -34,7 +37,17 @@ const Payment = () => {
     shippingPrice: orderInfo.shippingCharges,
     totalPrice: orderInfo.totalPrice,
   };
-
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `${error}`,
+        footer: '<a href="#">Why do I have this issue?</a>',
+      });
+      dispatch(clearErrors(dispatch));
+    }
+  }, [dispatch, error]);
   const submitHandler = async (e) => {
     e.preventDefault();
     payBtn.current.disabled = true;
@@ -74,40 +87,40 @@ const Payment = () => {
       });
 
       if (result.error) {
-        console.log("this")
+        console.log("this");
         payBtn.current.disabled = false;
         Swal.fire({
           icon: "error",
           title: "Payment error",
           text: `${result.error.message}`,
-          footer: '<a href="#">Why do I have this issue?</a>'
-        })
+          footer: '<a href="#">Why do I have this issue?</a>',
+        });
       } else {
         if (result.paymentIntent.status === "succeeded") {
           order.paymentInfo = {
             id: result.paymentIntent.id,
             status: result.paymentIntent.status,
           };
+          dispatch(createOrder(order));
+          window.location.replace("/success");
         } else {
-          console.log("this")
+          console.log("this");
           Swal.fire({
             icon: "error",
             title: "Payment error",
             text: `Something went wrong`,
-            footer: '<a href="#">Why do I have this issue?</a>'
-          })
+            footer: '<a href="#">Why do I have this issue?</a>',
+          });
         }
       }
     } catch (error) {
-      console.log("this")
-
       payBtn.current.disabled = false;
       Swal.fire({
         icon: "error",
         title: "Payment error",
         text: `${error.response.data.message}`,
-        footer: '<a href="#">Why do I have this issue?</a>'
-      })
+        footer: '<a href="#">Why do I have this issue?</a>',
+      });
     }
   };
   return (
