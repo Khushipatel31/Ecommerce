@@ -21,10 +21,10 @@ import Payment from './Components/Cart/Payment';
 import OrderSuccess from './Components/Cart/OrderSuccess';
 import OrderDetails from './Components/Order/OrderDetails';
 import AdminDashboard from './Components/admin/AdminDashboard';
+import ProductList from './Components/admin/ProductList';
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { MyOrders } from './Components/Order/MyOrders';
-
 
 const App = () => {
   
@@ -115,12 +115,22 @@ const App = () => {
           path: "/order/:id",
           element: <OrderDetails />
         },
+      ]
+    },{
+      path:"/admin",
+      element:<Dashboard/>,
+      children:[
         {
-          path:"/admin/dashboard",
-          element:<AdminDashboard/>
+          index: true,
+          element: <AdminDashboard />,
+        },
+        {
+          path:"products",
+          element:<ProductList/>
         }
       ]
-    },
+
+    }
   ]);
 
   const getStripeApiKey = async () => {
