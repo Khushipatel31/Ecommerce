@@ -19,8 +19,11 @@ import Shipping from './Components/Cart/Shipping';
 import ConfirmOrder from './Components/Cart/ConfirmOrder';
 import Payment from './Components/Cart/Payment';
 import OrderSuccess from './Components/Cart/OrderSuccess';
+import OrderDetails from './Components/Order/OrderDetails';
+import AdminDashboard from './Components/admin/AdminDashboard';
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { MyOrders } from './Components/Order/MyOrders';
 
 
 const App = () => {
@@ -104,6 +107,18 @@ const App = () => {
           path: "/success",
           element: <OrderSuccess />
         },
+        {
+          path: "/orders",
+          element: <MyOrders />
+        },
+        {
+          path: "/order/:id",
+          element: <OrderDetails />
+        },
+        {
+          path:"/admin/dashboard",
+          element:<AdminDashboard/>
+        }
       ]
     },
   ]);

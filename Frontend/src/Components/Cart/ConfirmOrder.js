@@ -8,7 +8,6 @@ import MetaData from "../Layouts/MetaData";
 const ConfirmOrder = () => {
     const { shippingInfo, cartItems } = useSelector((state) => state.cartSlice);
     const { user } = useSelector((state) => state.userSlice);
-
     const subTotal = cartItems.reduce((acc, item) =>
         acc += item.quantity * item.price, 0
     )

@@ -33,6 +33,7 @@ const Products = () => {
     (state) => state.productSlice
   );
 
+  console.log(products);
 
   const priceHandler = (event, newPrice) => {
     setPrice(newPrice);
@@ -72,15 +73,12 @@ const Products = () => {
                   return <li className="categorylink   hover:underline  hover:underline-offset-5 hover:font-bold  hover:text-fuchsia-950  " key={category} onClick={() => setCategory(category)}  >{category}</li>
                 })}
               </ul>
-              {
-                keyword &&
                 <fieldset className="border border-black px-1 ">
                   <Typography component="legend" >Ratings Above</Typography>
                   <Slider className="p-1" value={rating} valueLabelDisplay="auto" onChange={(e, newRating) => {
                     setRating(newRating);
                   }} aria-labelledby="continuous-slider" min={0} max={5} />
                 </fieldset>
-              }
 
             </div>
             <div className="flex flex-col items-center w-full  ">
@@ -89,7 +87,6 @@ const Products = () => {
                   products.map((product) => {
                     return <Product product={product} key={product._id}></Product>;
                   })}
-
               </div>
               {
                 resultPerPage < count && <div className="paginationBox">

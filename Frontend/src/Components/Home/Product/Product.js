@@ -1,15 +1,14 @@
 import React from "react";
-import ReactStars from "react-rating-stars-component";
 import { Link } from "react-router-dom";
+import { Rating } from "@material-ui/lab";
+
 
 const Product = ({ product }) => {
   const options = {
-    edit: false, //products that are seen we cannot edit star,
-    color: "rgba(20,20,20,0.1)",
-    activeColor: "rgba(255, 215, 0, 1)",
-    size: window.innerWidth < 600 ? 20 : 25,
+    size: "normal",
     value: product.ratings,
-    isHalf: true,
+    readOnly: true,
+    precision: 0.5,
   };
   return (
     <>
@@ -24,7 +23,7 @@ const Product = ({ product }) => {
         />
         <p className="text-xl mt-1 ">{product.name}</p>
         <div className="flex items-start    ">
-          <ReactStars {...options} />
+          <Rating {...options} />
           <span className="place-self-center ml-2  ">
             ({product.numOfReviews})
           </span>

@@ -23,7 +23,7 @@ const Payment = () => {
   const dispatch = useDispatch();
   const { shippingInfo, cartItems } = useSelector((state) => state.cartSlice);
   const { user } = useSelector((state) => state.userSlice);
-  const { error } = useSelector((state) => state.newOrderSlice);
+  const { error } = useSelector((state) => state.orderSlice);
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
   const payBtn = useRef(null);
   const paymentData = {

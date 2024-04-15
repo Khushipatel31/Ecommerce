@@ -11,7 +11,7 @@ const OrderSuccess = () => {
         Your Order has been Placed successfully
       </Typography>
       <Link
-        to="/order/me"
+        to="/orders"
         className="mt-9 w-48 ml-0 self-center text-lg   bg-fuchsia-950 rounded p-2 transition-all text-white hover:bg-fuchsia-900"
       >
         View Orders
