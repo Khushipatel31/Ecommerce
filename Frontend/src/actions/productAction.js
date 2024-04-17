@@ -10,11 +10,15 @@ import {
   NEW_REVIEW_FAIL,
   NEW_REVIEW_REQUEST,
   NEW_REVIEW_SUCCESS,
+  ADMIN_PRODUCT_REQUEST,
+  ADMIN_PRODUCT_FAIL,
+  ADMIN_PRODUCT_SUCCESS,
+  NEW_PRODUCT_FAIL,NEW_PRODUCT_REQUEST,NEW_PRODUCT_SUCCESS
 } from "../constants/productConstant";
 import { productRedux } from "../store/slices/productSlice";
 import { productDetailsRedux } from "../store/slices/productDetailsSlice";
-export const getProduct =
-  (keyword = "", currentPage = 1, price = [0, 25000], category, rating = 0) =>
+
+export const getProduct = (keyword = "", currentPage = 1, price = [0, 25000], category, rating = 0) =>
   async (dispatch) => {
     try {
       dispatch(productRedux.abc({ type: ALL_PRODUCT_REQUEST }));
@@ -22,12 +26,12 @@ export const getProduct =
       if (category !== "$") {
         link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[gte]=${price[0]}&price[lte]=${price[1]}&category=${category}`;
       }
-      if(rating>0){
-        link+= `&ratings=${rating}`
+      if (rating > 0) {
+        link += `&ratings=${rating}`;
       }
 
       const { data } = await axios.get(link);
-      console.log(data)
+      console.log(data);
       dispatch(
         productRedux.abc({
           type: ALL_PRODUCT_SUCCESS,
@@ -44,11 +48,54 @@ export const getProduct =
     }
   };
 
+
+export const getAdminProducts = () => async (dispatch) => {
+  try {
+    dispatch(productRedux.abc({ type: ADMIN_PRODUCT_REQUEST }));
+    const { data } = await axios('/api/v1/admin/products');
+    dispatch(
+      productRedux.abc({
+        type: ADMIN_PRODUCT_SUCCESS,
+        data: data,
+      })
+    );
+  } catch (error) {
+    dispatch(
+      productRedux.abc({
+        type: ADMIN_PRODUCT_FAIL,
+        error: error.message,
+      })
+    );
+  }
+}
+
+export const newProduct = (product) => async (dispatch) => {
+  try {
+    dispatch(productRedux.newProduct({ type: NEW_PRODUCT_REQUEST }));
+    const config = {
+      headers: { "Content-Type": "application/json" },
+    };
+    const { data } = await axios.post('/api/v1/admin/product/new', product, config);
+    dispatch(
+      productRedux.newProduct({
+        type: NEW_PRODUCT_SUCCESS,
+        data: data,
+      })
+    );
+  } catch (error) {
+    dispatch(
+      productRedux.newProduct({
+        type: NEW_PRODUCT_FAIL,
+        error: error.message,
+      })
+    );
+  }
+};
+
 export const getProductDetails = (id) => async (dispatch) => {
   try {
     dispatch(productDetailsRedux.detail({ type: PRODUCT_DETAILS_REQUEST }));
     const { data } = await axios.get(`/api/v1/product/${id}`);
-    console.log("Product ");
     dispatch(
       productDetailsRedux.detail({
         type: PRODUCT_DETAILS_SUCCESS,

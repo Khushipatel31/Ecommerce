@@ -8,6 +8,13 @@ import {
   NEW_REVIEW_SUCCESS,
   NEW_REVIEW_RESET,
   CLEAR_ERRORS,
+  ADMIN_PRODUCT_REQUEST,
+  ADMIN_PRODUCT_FAIL,
+  ADMIN_PRODUCT_SUCCESS,
+  NEW_PRODUCT_REQUEST,
+  NEW_PRODUCT_SUCCESS,
+  NEW_PRODUCT_FAIL,
+  NEW_PRODUCT_RESET,
 } from "../../constants/productConstant";
 const initialState = {
   products: [],
@@ -16,7 +23,8 @@ const initialState = {
   productCount: 0,
   resultPerPage: null,
   filteredProductsCount: 0,
-  success:null
+  success: null,
+  product:null
 };
 
 const productSlice = createSlice({
@@ -26,6 +34,7 @@ const productSlice = createSlice({
     abc: (state, action) => {
       switch (action.payload.type) {
         case ALL_PRODUCT_REQUEST:
+        case ADMIN_PRODUCT_REQUEST:
           return {
             ...state,
             loading: true,
@@ -40,7 +49,13 @@ const productSlice = createSlice({
             resultPerPage: action.payload.data.resultPerPage,
             filteredProductsCount: action.payload.data.filteredProductsCount,
           };
+        case ADMIN_PRODUCT_SUCCESS:
+          return {
+            loading: false,
+            products: action.payload.data.products
+          }
         case ALL_PRODUCT_FAIL:
+        case ADMIN_PRODUCT_FAIL:
           return {
             ...state,
             loading: false,
@@ -62,7 +77,6 @@ const productSlice = createSlice({
           return {
             ...state,
             loading: true,
-            products: [],
           };
         case NEW_REVIEW_SUCCESS:
           return {
@@ -76,12 +90,48 @@ const productSlice = createSlice({
             loading: false,
             error: action.payload.error,
           };
-          case NEW_REVIEW_RESET:
-            return {
-                ...state,
-              success:false,
-              loading:false
-            };
+        case NEW_REVIEW_RESET:
+          return {
+            ...state,
+            success: false,
+            loading: false,
+          };
+        case CLEAR_ERRORS:
+          return {
+            ...state,
+            error: null,
+          };
+        default: {
+          return state;
+        }
+      }
+    },
+    newProduct: (state, action) => {
+      switch (action.payload.type) {
+        case NEW_PRODUCT_REQUEST:
+          return {
+            ...state,
+            loading: true,
+          };
+        case NEW_PRODUCT_SUCCESS:
+          return {
+            ...state,
+            loading: false,
+            success: action.payload.data.success,
+            product:action.payload.data.product
+          };
+        case NEW_PRODUCT_FAIL:
+          return {
+            ...state,
+            loading: false,
+            error: action.payload.error,
+          };
+        case NEW_PRODUCT_RESET:
+          return {
+            ...state,
+            success: false,
+            loading: false,
+          };
         case CLEAR_ERRORS:
           return {
             ...state,

@@ -1,18 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Sidebar from "./Sidebar.js";
 import { Typography } from "@material-ui/core";
 import { Doughnut, Line } from "react-chartjs-2";
 import { Link } from "react-router-dom";
 import MetaData from "../Layouts/MetaData.js";
 import Chart from "chart.js/auto";
+import { useDispatch, useSelector } from "react-redux";
+import { getAdminProducts } from "../../actions/productAction.js";
 const AdminDashboard = () => {
+  const dispatch = useDispatch();
+  const { products } = useSelector((state) => state.productSlice);
+  useEffect(() => {
+    dispatch(getAdminProducts());
+  }, [dispatch]);
+
+  let outOfStock = 0;
+  products &&
+    products.forEach((item) => {
+      if (item.stock === 0) {
+        outOfStock += 1;
+      }
+    });
+
   const doughnutState = {
     labels: ["Out of Stock", "InStock"],
     datasets: [
       {
         backgroundColor: ["#00A6B4", "#6800B4"],
         hoverBackgroundColor: ["#4B5000", "#35014F"],
-        data: [2, 10],
+        data: [outOfStock, products.length-outOfStock],
       },
     ],
   };
@@ -36,13 +52,6 @@ const AdminDashboard = () => {
         <Sidebar />
 
         <div className="dashboardContainer col-span-2 p-4 w-full">
-          <Typography
-            component="h1"
-            style={{ fontSize: "2rem", textAlign: "center" }}
-            className="text-black opacity-75 font-light py-6"
-          >
-            Dashboard
-          </Typography>
 
           <div className="dashboardSummary flex items-center w-full flex-col h-[90%] ">
             <div>
@@ -56,7 +65,7 @@ const AdminDashboard = () => {
                 className="w-80 text-center py-20 rounded shadow-md text-2xl bg-fuchsia-100"
               >
                 <p>Product</p>
-                <p>"kdmvs"</p>
+                <p>{products && products.length}</p>
               </Link>
               <Link
                 to="/admin/orders"

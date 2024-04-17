@@ -22,12 +22,13 @@ import OrderSuccess from './Components/Cart/OrderSuccess';
 import OrderDetails from './Components/Order/OrderDetails';
 import AdminDashboard from './Components/admin/AdminDashboard';
 import ProductList from './Components/admin/ProductList';
+import NewProduct from "./Components/admin/NewProduct"
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { MyOrders } from './Components/Order/MyOrders';
 
 const App = () => {
-  
+
   const [stripeApiKey, setStripeApiKey] = useState("");
   const routes = createBrowserRouter([
     {
@@ -116,17 +117,21 @@ const App = () => {
           element: <OrderDetails />
         },
       ]
-    },{
-      path:"/admin",
-      element:<Dashboard/>,
-      children:[
+    }, {
+      path: "/admin",
+      element: <Dashboard />,
+      children: [
         {
           index: true,
           element: <AdminDashboard />,
         },
         {
-          path:"products",
-          element:<ProductList/>
+          path: "products",
+          element: <ProductList />
+        },
+        {
+          path: "product",
+          element: <NewProduct />
         }
       ]
 

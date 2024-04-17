@@ -19,6 +19,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.7",
     "chart.js": "^4.4.2",
+    "compressorjs": "^1.2.1",
     "country-state-city": "^3.2.1",
     "formik": "^2.4.5",
     "helmet": "^7.1.0",

@@ -54,15 +54,11 @@ const LoginSignup = () => {
     };
 
     const registerSubmit = (values, { setSubmitting }) => {
-        console.log("Register form submitted");
-        console.log(values);
-        console.log("Profile Image:", profileImage);
         const formData = new FormData();
         formData.append('name', values.registerName);
         formData.append('email', values.registerEmail);
         formData.append('password', values.registerPassword);
         formData.append('profileImage', profileImage);
-        console.log(formData);
         setSubmitting(false);
         dispatch(register(formData));
     };
@@ -76,8 +72,8 @@ const LoginSignup = () => {
         const reader = new FileReader();
         reader.onload = () => {
             if (reader.readyState === 2) {
-                setProfilePreview(reader.result); // Set the image preview
-                setProfileImage(reader.result); // Set the uploaded image
+                setProfilePreview(reader.result); 
+                setProfileImage(reader.result); 
             }
         };
         reader.readAsDataURL(file);
