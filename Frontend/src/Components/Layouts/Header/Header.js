@@ -31,7 +31,7 @@ const Header = () => {
     <header className="shadow-md h-20 w-full z-50  relative   ">
       <div className="px-4 h-full flex items-center justify-between">
         <div className="w-40 md:w-20">
-          <img src={logo} alt="img"></img>
+          <Link to="/"> <img src={logo} alt="img"></img></Link>
         </div>
         <div className="flex items-center gap-4     md:gap-7 ">
           <nav className="flex gap-8 items-center  md:gap-3 ">
@@ -50,14 +50,14 @@ const Header = () => {
 
             </div>
             <Link to={"/"}>Home</Link>
-            <Link to={"products"}>
+            <Link to={"/products"}>
               <div>Products</div>
             </Link>
             <Link to={"contact"}>Contact</Link>
             <div>Contact</div>
             <div>About</div>
           </nav>
-          <Link to={"cart"}>
+          <Link to={"/cart"}>
             <div className="text-fuchsia-950 text-2xl relative">
               <FaShoppingCart />
               <div className="absolute  text-white bg-red-500 h-4 text-xs -top-2 -right-1 rounded-xl px-1 ">
@@ -90,7 +90,7 @@ const Header = () => {
                   <Link to={"orders"}> <p className="whitespace-nowrap p-1 cursor-pointer  ">
                     Order
                   </p></Link>
-                  <Link to={"account"}> <p className="whitespace-nowrap p-1 cursor-pointer  ">
+                  <Link to={"/account"}> <p className="whitespace-nowrap p-1 cursor-pointer  ">
                     Profile
                   </p></Link>
                   <Link to={""} onClick={logoutt}><p className="whitespace-nowrap p-1 cursor-pointer ">Logout</p></Link>

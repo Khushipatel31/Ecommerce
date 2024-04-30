@@ -13,10 +13,14 @@ import {
   ADMIN_PRODUCT_REQUEST,
   ADMIN_PRODUCT_FAIL,
   ADMIN_PRODUCT_SUCCESS,
-  NEW_PRODUCT_FAIL,NEW_PRODUCT_REQUEST,NEW_PRODUCT_SUCCESS
+  NEW_PRODUCT_FAIL,NEW_PRODUCT_REQUEST,NEW_PRODUCT_SUCCESS,
+  DELETE_PRODUCT_FAIL,
+  DELETE_PRODUCT_REQUEST,
+  DELETE_PRODUCT_SUCCESS
 } from "../constants/productConstant";
 import { productRedux } from "../store/slices/productSlice";
 import { productDetailsRedux } from "../store/slices/productDetailsSlice";
+import Swal from "sweetalert2";
 
 export const getProduct = (keyword = "", currentPage = 1, price = [0, 25000], category, rating = 0) =>
   async (dispatch) => {
@@ -47,7 +51,6 @@ export const getProduct = (keyword = "", currentPage = 1, price = [0, 25000], ca
       );
     }
   };
-
 
 export const getAdminProducts = () => async (dispatch) => {
   try {
@@ -81,6 +84,7 @@ export const newProduct = (product) => async (dispatch) => {
         type: NEW_PRODUCT_SUCCESS,
         data: data,
       })
+      
     );
   } catch (error) {
     dispatch(
@@ -91,6 +95,35 @@ export const newProduct = (product) => async (dispatch) => {
     );
   }
 };
+
+export const deleteProduct = (id) => async (dispatch) => {
+  try {
+    dispatch(productRedux.deleteProduct({ type: DELETE_PRODUCT_REQUEST }));
+    const { data } = await axios.delete(`/api/v1/admin/product/${id}`)
+    dispatch(
+      productRedux.deleteProduct({
+        type: DELETE_PRODUCT_SUCCESS,
+        data: data,
+      })
+    );
+    Swal.fire({
+      icon: "success",
+      title: "Product Deleted Successfully",
+      text: "You have successfully deleted product!",
+      confirmButtonText: "OK",
+  }).then(()=>{
+    window.location.replace("/admin/products")
+  })
+  } catch (error) {
+    dispatch(
+      productRedux.deleteProduct({
+        type: DELETE_PRODUCT_FAIL,
+        error: error.message,
+      })
+    );
+  }
+};
+
 
 export const getProductDetails = (id) => async (dispatch) => {
   try {

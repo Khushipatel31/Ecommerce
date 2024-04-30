@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   clearErrors,
   getAdminProducts,
-  // deleteProduct,
+  deleteProduct
 } from "../../actions/productAction";
 import { Link } from "react-router-dom";
 import { Button, Typography } from "@material-ui/core";
@@ -12,15 +12,17 @@ import MetaData from "../Layouts/MetaData"
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SideBar from "./Sidebar";
+import { DELETE_PRODUCT_RESET } from "../../constants/productConstant";
 const Swal = require("sweetalert2");
-// import { DELETE_PRODUCT_RESET } from "../../constants/productConstants";
 
 const ProductList = () => {
   const dispatch = useDispatch();
+  const deleteProductHandler = (id) => {
+    dispatch(deleteProduct(id));
+  };
 
-  const { error, products } = useSelector((state) => state.productSlice);
+  const { error, products, error: deleteError, isDeleted } = useSelector((state) => state.productSlice);
 
-  console.log(products)
   useEffect(() => {
     if (error) {
       Swal.fire({
@@ -32,7 +34,16 @@ const ProductList = () => {
       dispatch(clearErrors());
     }
     dispatch(getAdminProducts());
-  }, [dispatch, error]);
+    if (isDeleted) {
+      Swal.fire({
+        icon: "success",
+        title: "Product Deleted Successfully",
+        text: "You have successfully deleted product!",
+        confirmButtonText: "OK",
+      })
+      dispatch({ type: DELETE_PRODUCT_RESET });
+    }
+  }, [dispatch, error,deleteError,isDeleted]);
 
   const customStyles = `
   .MuiDataGrid-columnHeader {
@@ -86,7 +97,9 @@ const ProductList = () => {
             <Link to={`/admin/product/${params.getValue(params.id, "id")}`}>
               <EditIcon style={{ color: " rgb(74 4 78)" }} />
             </Link>
-            <Button
+            <Button onClick={() =>
+              deleteProductHandler(params.getValue(params.id, "id"))
+            }
             >
               <DeleteIcon style={{ color: " rgb(74 4 78)" }} />
             </Button>
@@ -125,14 +138,14 @@ const ProductList = () => {
           >
             Products
           </Typography>
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              pageSize={10}
-              disableSelectionOnClick
-              className="productListTable bg-white w-[80vw] shadow-md "
-              autoHeight
-            />
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSize={10}
+            disableSelectionOnClick
+            className="productListTable bg-white w-[80vw] shadow-md "
+            autoHeight
+          />
 
         </div>
       </div>

@@ -1,8 +1,7 @@
 const Product = require("../model/product");
 // const { ObjectId } = require('mongoose').Types; 
 const mongoose = require("mongoose");
-const cloudinary=require("cloudinary");
-
+const cloudinary = require("cloudinary");
 const { CustomHttpError } = require("../utils/CustomError");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ApiFeatures = require("../utils/ApiFeatures");
@@ -12,7 +11,7 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
   let apiFeature = new ApiFeatures(Product.find(), req.query)
     .search()
     .filter()
-    // .paginate(resultPerPage);
+  // .paginate(resultPerPage);
   let products = await apiFeature.query;
   let filteredProductsCount = products.length;//8
 
@@ -33,8 +32,8 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
 
 //Admin
 exports.getAdminProducts = catchAsyncErrors(async (req, res, next) => {
-  
- const  products = await Product.find();
+
+  const products = await Product.find();
   res.status(200).json({
     success: true,
     results: products.length,
@@ -45,24 +44,24 @@ exports.getAdminProducts = catchAsyncErrors(async (req, res, next) => {
 //create product --admin
 exports.createProduct = catchAsyncErrors(async (req, res, next) => {
   req.body.user = req.user.id;
-  let images=[];
-  if(typeof req.body.images==="string"){
+  let images = [];
+  if (typeof req.body.images === "string") {
     images.push(req.body.images);
-  }else{
-    images=req.body.images;
+  } else {
+    images = req.body.images;
   }
-  const imagesLink=[];
-  for(let i=0;i<images.length;i++){
-    const result=await cloudinary.v2.uploader.upload(images[i],{
-      folder:"products"
+  const imagesLink = [];
+  for (let i = 0; i < images.length; i++) {
+    const result = await cloudinary.v2.uploader.upload(images[i], {
+      folder: "products"
     });
     imagesLink.push({
-      public_id:result.public_id,
-      url:result.secure_url
+      public_id: result.public_id,
+      url: result.secure_url
     })
   }
-  req.body.images=imagesLink;
-  req.body.user=req.user.id;
+  req.body.images = imagesLink;
+  req.body.user = req.user.id;
   const product = await Product.create(req.body);
   res.status(200).json({
     success: true,
@@ -98,6 +97,9 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
     return res
       .status(500)
       .json({ success: false, msg: "No such product found" });
+  }
+  for (let i = 0; i < product.images.length; i++) {
+    await cloudinary.v2.uploader.destroy(product.images[i].public_id);
   }
   let response = await Product.deleteOne({ _id: product._id });
   if (response.acknowledged) {

@@ -13,7 +13,6 @@ import { NEW_PRODUCT_RESET } from "../../constants/productConstant";
 import { ErrorMessage, Field, Formik } from "formik";
 import { Form } from "react-router-dom";
 import Swal from "sweetalert2";
-import Compressor from "compressorjs";
 const NewProduct = () => {
     const dispatch = useDispatch();
     const { loading, error, success } = useSelector(
@@ -29,60 +28,52 @@ const NewProduct = () => {
                 icon: "error",
                 title: "Oops...",
                 text: `${error}`,
-                footer: '<a href="#">Why do I have this issue?</a>'
+                footer: '<a href="#">Why do I have this issue?</a>',
             });
             dispatch(clearErrors(dispatch));
         }
         if (success) {
             Swal.fire({
-                icon: 'success',
-                title: 'Product Created Successfully',
-                text: 'You have successfully registered!',
-                confirmButtonText: 'OK'
-            })
-            window.location.replace("/admin");
-            dispatch({ type: NEW_PRODUCT_RESET });
+                icon: "success",
+                title: "Product Created Successfully",
+                text: "You have successfully registered!",
+                confirmButtonText: "OK",
+            }).then(() => {
+                window.location.replace("/admin");
+                dispatch({ type: NEW_PRODUCT_RESET });
+            });
         }
-
-    }, [dispatch, error, success])
+    }, [dispatch, error, success]);
     const createProductSubmitHandler = (values, { setSubmitting }) => {
-
-        console.log(values);
-        console.log(images)
         const myForm = {
             name: values.name,
             price: values.price,
             description: values.description,
             category: values.categoryy,
             Stock: values.stock,
-            images, 
-        }
-        console.log(myForm)
+            images,
+        };
+        console.log(myForm);
         dispatch(newProduct(myForm));
         setSubmitting(false);
         window.location.replace("/admin/");
     };
 
-
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
-    
         setImages([]);
         setImagesPreview([]);
-    
         files.forEach((file) => {
-          const reader = new FileReader();
-    
-          reader.onload = () => {
-            if (reader.readyState === 2) {
-              setImagesPreview((old) => [...old, reader.result]);
-              setImages((old) => [...old, reader.result]);
-            }
-          };
-    
-          reader.readAsDataURL(file);
+            const reader = new FileReader();
+            reader.onload = () => {
+                if (reader.readyState === 2) {
+                    setImagesPreview((old) => [...old, reader.result]);
+                    setImages((old) => [...old, reader.result]);
+                }
+            };
+            reader.readAsDataURL(file);
         });
-      };
+    };
     return (
         <>
             <MetaData title="New Product" />
@@ -109,7 +100,10 @@ const NewProduct = () => {
                                 onSubmit={createProductSubmitHandler}
                             >
                                 {({ values, isSubmitting, handleSubmit }) => (
-                                    <Form className="   pb-9  signupForm flex flex-col items-center m-auto pt-9 px-[2vmax] justify-evenly gap-4 h-[90%] transition-all" onSubmit={handleSubmit}>
+                                    <Form
+                                        className="   pb-9  signupForm flex flex-col items-center m-auto pt-9 px-[2vmax] justify-evenly gap-4 h-[90%] transition-all"
+                                        onSubmit={handleSubmit}
+                                    >
                                         <div className="signUpName flex w-full items-center">
                                             <SpellcheckIcon className="absolute translate-x-0 text-6xl ml-8" />
                                             <Field
@@ -122,7 +116,6 @@ const NewProduct = () => {
                                         <div className="registerEmail flex w-full items-center">
                                             <div className="flex-col flex w-full">
                                                 <AttachMoneyIcon className="absolute translate-x-0 translate-y-4 text-6xl ml-8" />
-                                                {/* <Field type='email' name='registerEmail' placeholder='Email' className='rounded px-1 py-4 pl-20 w-full box-border border-2 border-gray-500' /> */}
                                                 <Field
                                                     type="number"
                                                     name="price"
@@ -133,7 +126,6 @@ const NewProduct = () => {
                                         </div>
                                         <div className="registerPassword flex w-full items-center">
                                             <DescriptionIcon className="absolute translate-x-0 text-6xl ml-8" />
-                                            {/* <Field type='password' name='registerPassword' placeholder='Password' className='px-1 py-4 rounded pl-20 w-full box-border border-2 border-gray-500' /> */}
                                             <Field
                                                 as="textarea"
                                                 type="text"
@@ -146,7 +138,6 @@ const NewProduct = () => {
                                         </div>
                                         <div className="registerPassword flex w-full items-center">
                                             <AccountTreeIcon className="absolute translate-x-0 text-6xl ml-8" />
-                                            {/* <Field type='password' name='registerPassword' placeholder='Password' className='px-1 py-4 rounded pl-20 w-full box-border border-2 border-gray-500' /> */}
                                             <Field
                                                 as="select"
                                                 className="px-1 py-4 rounded pl-20 w-full box-border border-2 border-gray-500"
@@ -163,7 +154,6 @@ const NewProduct = () => {
                                         <div className="registerEmail flex w-full items-center">
                                             <div className="flex-col flex w-full">
                                                 <StorageIcon className="absolute translate-x-0 translate-y-4 text-6xl ml-8" />
-                                                {/* <Field type='email' name='registerEmail' placeholder='Email' className='rounded px-1 py-4 pl-20 w-full box-border border-2 border-gray-500' /> */}
                                                 <Field
                                                     type="number"
                                                     name="stock"
@@ -195,7 +185,6 @@ const NewProduct = () => {
                                                 </div>
                                             ))}
                                         </div>
-
                                         <button
                                             type="submit"
                                             className="loginBtn text-lg bg-fuchsia-950 rounded p-2 w-full transition-all text-white hover:bg-fuchsia-900"

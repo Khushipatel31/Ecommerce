@@ -117,7 +117,7 @@ const App = () => {
           element: <OrderDetails />
         },
       ]
-    }, {
+    },{
       path: "/admin",
       element: <Dashboard />,
       children: [

@@ -22,7 +22,7 @@ const Shipping = () => {
   const shippingSubmit = (values, { setSubmitting }) => {
     console.log(values);
     const formData = {
-      address: values.address || "", // Default to empty string if address is undefined
+      address: values.address || "", 
       city: values.city || "",
       state: values.state || "",
       country: values.country || "",

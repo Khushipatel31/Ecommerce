@@ -19,8 +19,9 @@ router
     authorizeRoles("admin"),
     productController.createProduct
   );
+
 router
-  .route("admin/product/:id")
+  .route("/admin/product/:id")
   .put(
     isAuthenticatedUser,
     authorizeRoles("admin"),
