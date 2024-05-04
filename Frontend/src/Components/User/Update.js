@@ -20,9 +20,6 @@ const Update = () => {
     const [name, setName] = useState(user.name);
     const [email, setEmail] = useState(user.email);
     const updateProfileSubmit = async (values, { setSubmitting }) => {
-        console.log("Register form submitted");
-        console.log(values);
-        console.log("Profile Image:", profileImage);
         if (flag === 0) {
             setProfileImage("");
         }

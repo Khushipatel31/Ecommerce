@@ -23,9 +23,12 @@ import OrderDetails from './Components/Order/OrderDetails';
 import AdminDashboard from './Components/admin/AdminDashboard';
 import ProductList from './Components/admin/ProductList';
 import NewProduct from "./Components/admin/NewProduct"
+import UpdateProduct from './Components/admin/UpdateProduct';
+import ProcessOrder from './Components/admin/ProcessOrder';
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { MyOrders } from './Components/Order/MyOrders';
+import Orders from './Components/admin/Orders';
 
 const App = () => {
 
@@ -132,6 +135,18 @@ const App = () => {
         {
           path: "product",
           element: <NewProduct />
+        },
+        {
+          path: "product/:id",
+          element: <UpdateProduct />
+        },
+        {
+          path:"orders",
+          element:<Orders/>
+        },
+        {
+          path:"order/:id",
+          element:<ProcessOrder/>
         }
       ]
 

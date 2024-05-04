@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {PRODUCT_DETAILS_FAIL,PRODUCT_DETAILS_SUCCESS,PRODUCT_DETAILS_REQUEST, CLEAR_ERRORS } from "../../constants/productConstant";
 const initialState = {
-    product: [],
+    product: {},
     error:null,
     loading:false,
 }
@@ -11,6 +11,7 @@ const productDetailsSlice = createSlice({
     initialState,
     reducers: {
         detail: (state, action) => {
+            console.log(action.payload)
             switch (action.payload.type) {
                 case PRODUCT_DETAILS_REQUEST:
                     return {

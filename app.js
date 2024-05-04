@@ -5,6 +5,7 @@ const dotenv=require("dotenv");
 const bodyParser=require("body-parser");
 const fileUpload=require("express-fileupload");
 dotenv.config();
+app.use(bodyParser.json({ limit: '10mb' })); 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(fileUpload());

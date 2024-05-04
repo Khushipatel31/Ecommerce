@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { clearErrors, newProduct } from "../../actions/productAction";
+import { clearErrors, updateProduct, getProductDetails } from "../../actions/productAction";
 import { Button } from "@material-ui/core";
 import MetaData from "../Layouts/MetaData";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
@@ -9,20 +9,50 @@ import StorageIcon from "@material-ui/icons/Storage";
 import SpellcheckIcon from "@material-ui/icons/Spellcheck";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import SideBar from "./Sidebar";
-import { NEW_PRODUCT_RESET } from "../../constants/productConstant";
+import { UPDATE_PRODUCT_RESET } from "../../constants/productConstant";
 import { ErrorMessage, Field, Formik } from "formik";
-import { Form } from "react-router-dom";
+import { Form, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-const NewProduct = () => {
+const UpdateProduct = () => {
     const dispatch = useDispatch();
-    const {  error, success } = useSelector(
+    const { id } = useParams();
+    const { product, error } = useSelector(
+        (state) => state.productDetailsSlice
+    );
+    const { loading, error: updateError, isUpdated, success } = useSelector(
         (state) => state.productSlice
     );
+
     const categories = ["Electrical", "PC", "Laptop", "Tablet"];
-    const [imagesPreview, setImagesPreview] = useState([]);
+    const [name, setName] = useState("");
+    const [price, setPrice] = useState(0);
+    const [description, setDescription] = useState();
+    const [category, setCategory] = useState("");
+    const [stock, setStock] = useState(0);
     const [images, setImages] = useState([]);
+    const [oldImages, setOldImages] = useState([]);
+    const [imagesPreview, setImagesPreview] = useState([]);
+
 
     useEffect(() => {
+        if (!product || product._id !== id) {
+            dispatch(getProductDetails(id));
+            console.log("request");
+        }
+    }, [])
+
+    useEffect(() => {
+
+        console.log(product)
+        if (product && product._id == id) {
+            setName(product.name);
+            setDescription(product.description);
+            setPrice(product.price);
+            setCategory(product.category);
+            setStock(product.stock);
+            setOldImages(product.images);
+        }
+       
         if (error) {
             Swal.fire({
                 icon: "error",
@@ -32,19 +62,29 @@ const NewProduct = () => {
             });
             dispatch(clearErrors(dispatch));
         }
-        if (success) {
+        if (updateError) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: `${updateError}`,
+                footer: '<a href="#">Why do I have this issue?</a>',
+            });
+            dispatch(clearErrors(dispatch));
+        }
+        if (isUpdated) {
             Swal.fire({
                 icon: "success",
-                title: "Product Created Successfully",
-                text: "You have successfully registered!",
+                title: "Product Updated Successfully",
+                text: "You have successfully updated product detailss!",
                 confirmButtonText: "OK",
             }).then(() => {
-                dispatch({ type: NEW_PRODUCT_RESET });
-                window.location.replace("/admin");
+                dispatch({ type: UPDATE_PRODUCT_RESET });
+                window.location.replace("/admin/products");
             });
         }
-    }, [dispatch, error, success]);
-    const createProductSubmitHandler = (values, { setSubmitting }) => {
+    }, [dispatch, id, error, updateError, isUpdated, product]);
+
+    const updateProductSubmitHandler = (values, { setSubmitting }) => {
         const myForm = {
             name: values.name,
             price: values.price,
@@ -53,8 +93,7 @@ const NewProduct = () => {
             Stock: values.stock,
             images,
         };
-        console.log(myForm);
-        dispatch(newProduct(myForm));
+        dispatch(updateProduct(id, myForm));
         setSubmitting(false);
     };
 
@@ -62,6 +101,7 @@ const NewProduct = () => {
         const files = Array.from(e.target.files);
         setImages([]);
         setImagesPreview([]);
+        setOldImages([]);
         files.forEach((file) => {
             const reader = new FileReader();
             reader.onload = () => {
@@ -84,21 +124,22 @@ const NewProduct = () => {
                             <div>
                                 <div className="flex h-[3vmax]">
                                     <p className="transition-all text-xl cursor-pointer grid place-items-center w-full hover:text-fuchsia-700 hover:font-bold text-fuchsia-700 font-bold border-b-4 border-fuchsia-950">
-                                        Create Product
+                                        Update Product
                                     </p>
                                 </div>
                             </div>
+                            <div>{name}{price}</div>
                             <Formik
                                 initialValues={{
-                                    name: "",
-                                    price: "",
-                                    description: "",
-                                    categoryy: "",
-                                    stock: "",
+                                    name: product.name,
+                                    price: price,
+                                    description: description,
+                                    category: category,
+                                    stock: stock,
                                 }}
-                                onSubmit={createProductSubmitHandler}
+                                onSubmit={updateProductSubmitHandler}
                             >
-                                {({ values, isSubmitting, handleSubmit }) => (
+                                {({ isSubmitting, handleSubmit, setFieldValue }) => (
                                     <Form
                                         className="   pb-9  signupForm flex flex-col items-center m-auto pt-9 px-[2vmax] justify-evenly gap-4 h-[90%] transition-all"
                                         onSubmit={handleSubmit}
@@ -138,9 +179,10 @@ const NewProduct = () => {
                                         <div className="registerPassword flex w-full items-center">
                                             <AccountTreeIcon className="absolute translate-x-0 text-6xl ml-8" />
                                             <Field
+
                                                 as="select"
                                                 className="px-1 py-4 rounded pl-20 w-full box-border border-2 border-gray-500"
-                                                name="categoryy"
+                                                name="category"
                                             >
                                                 <option value="">Choose Category</option>
                                                 {categories.map((cate) => (
@@ -174,6 +216,20 @@ const NewProduct = () => {
                                             id="createProductFormImage"
                                             className="flex flex-wrap justify-center"
                                         >
+                                            {oldImages && oldImages.map((image, index) => (
+                                                <div className="flex  mr-3" key={index}>
+                                                    <img
+                                                        src={image && image.url}
+                                                        alt={`Preview ${index + 1}`}
+                                                        className="max-w-32 h-auto rounded-lg"
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div
+                                            id="createProductFormImage"
+                                            className="flex flex-wrap justify-center"
+                                        >
                                             {imagesPreview.map((image, index) => (
                                                 <div className="flex  mr-3" key={index}>
                                                     <img
@@ -200,6 +256,6 @@ const NewProduct = () => {
             </div>
         </>
     );
-};
+}
 
-export default NewProduct;
+export default UpdateProduct

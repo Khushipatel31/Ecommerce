@@ -18,7 +18,11 @@ import {
   DELETE_PRODUCT_FAIL,
   DELETE_PRODUCT_REQUEST,
   DELETE_PRODUCT_RESET,
-  DELETE_PRODUCT_SUCCESS
+  DELETE_PRODUCT_SUCCESS,
+  UPDATE_PRODUCT_FAIL,
+  UPDATE_PRODUCT_REQUEST,
+  UPDATE_PRODUCT_SUCCESS,
+  UPDATE_PRODUCT_RESET
 } from "../../constants/productConstant";
 const initialState = {
   products: [],
@@ -29,8 +33,10 @@ const initialState = {
   filteredProductsCount: 0,
   success: null,
   product:null,
+  isUpdated:null,
   isDeleted:null
 };
+console.log("hi")
 
 const productSlice = createSlice({
   name: "productSlice",
@@ -122,8 +128,9 @@ const productSlice = createSlice({
           return {
             ...state,
             loading: false,
-            isDeleted: action.payload.data.success,
-            product:action.payload.data.product
+            product:action.payload.data.product,
+            success: action.payload.data.success,
+            error:null
           };
         case NEW_PRODUCT_FAIL:
           return {
@@ -134,8 +141,9 @@ const productSlice = createSlice({
         case NEW_PRODUCT_RESET:
           return {
             ...state,
-            isDeleted: false,
             loading: false,
+            success:false,
+            error:null
           };
         case CLEAR_ERRORS:
           return {
@@ -149,6 +157,7 @@ const productSlice = createSlice({
     },
     deleteProduct: (state, action) => {
       switch (action.payload.type) {
+        case UPDATE_PRODUCT_REQUEST:
         case DELETE_PRODUCT_REQUEST:
           return {
             ...state,
@@ -158,9 +167,17 @@ const productSlice = createSlice({
           return {
             ...state,
             loading: false,
-            success: action.payload.data.success,
+            isDeleted: action.payload.data.success,
+          };
+          case UPDATE_PRODUCT_SUCCESS:
+          return {
+            ...state,
+            loading: false,
+            // success: action.payload.data.success,
+            isUpdated:action.payload.data.success,
           };
         case DELETE_PRODUCT_FAIL:
+        case  UPDATE_PRODUCT_FAIL:
           return {
             ...state,
             loading: false,
@@ -169,9 +186,15 @@ const productSlice = createSlice({
         case DELETE_PRODUCT_RESET:
           return {
             ...state,
-            success: false,
             loading: false,
+            isDeleted: false,
           };
+          case UPDATE_PRODUCT_RESET:
+            return {
+              ...state,
+              loading: false,
+              isUpdated: false,
+            };
         case CLEAR_ERRORS:
           return {
             ...state,
