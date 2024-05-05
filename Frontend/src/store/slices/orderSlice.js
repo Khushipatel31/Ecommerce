@@ -178,6 +178,7 @@ const orderSlice = createSlice({
           return {
             ...state,
             loading: false,
+            isUpdated:false,
             error: action.payload.error,
           };
         case UPDATE_ORDER_RESET:
@@ -196,6 +197,7 @@ const orderSlice = createSlice({
           return {
             ...state,
             error: null,
+            isUpdated:false
           };
         default: {
           return state;

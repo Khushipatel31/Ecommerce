@@ -52,7 +52,15 @@ const UpdateProduct = () => {
             setStock(product.stock);
             setOldImages(product.images);
         }
-       
+       if(product){
+        Formik.setValues({
+            name: product.name || "",
+            price: product.price || 0,
+            description: product.description || "",
+            category: product.category || "",
+            stock: product.stock || 0,
+        });
+       }
         if (error) {
             Swal.fire({
                 icon: "error",

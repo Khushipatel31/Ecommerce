@@ -22,7 +22,14 @@ import {
   UPDATE_PRODUCT_FAIL,
   UPDATE_PRODUCT_REQUEST,
   UPDATE_PRODUCT_SUCCESS,
-  UPDATE_PRODUCT_RESET
+  UPDATE_PRODUCT_RESET,
+  ALL_REVIEW_REQUEST,
+  ALL_REVIEW_SUCCESS,
+  ALL_REVIEW_FAIL,
+  DELETE_REVIEW_REQUEST,
+  DELETE_REVIEW_SUCCESS,
+  DELETE_REVIEW_FAIL,
+  DELETE_REVIEW_RESET
 } from "../../constants/productConstant";
 const initialState = {
   products: [],
@@ -32,11 +39,11 @@ const initialState = {
   resultPerPage: null,
   filteredProductsCount: 0,
   success: null,
-  product:null,
-  isUpdated:null,
-  isDeleted:null
+  product: null,
+  isUpdated: null,
+  isDeleted: null,
+  reviews: []
 };
-console.log("hi")
 
 const productSlice = createSlice({
   name: "productSlice",
@@ -128,9 +135,9 @@ const productSlice = createSlice({
           return {
             ...state,
             loading: false,
-            product:action.payload.data.product,
+            product: action.payload.data.product,
             success: action.payload.data.success,
-            error:null
+            error: null
           };
         case NEW_PRODUCT_FAIL:
           return {
@@ -142,8 +149,8 @@ const productSlice = createSlice({
           return {
             ...state,
             loading: false,
-            success:false,
-            error:null
+            success: false,
+            error: null
           };
         case CLEAR_ERRORS:
           return {
@@ -169,15 +176,15 @@ const productSlice = createSlice({
             loading: false,
             isDeleted: action.payload.data.success,
           };
-          case UPDATE_PRODUCT_SUCCESS:
+        case UPDATE_PRODUCT_SUCCESS:
           return {
             ...state,
             loading: false,
             // success: action.payload.data.success,
-            isUpdated:action.payload.data.success,
+            isUpdated: action.payload.data.success,
           };
         case DELETE_PRODUCT_FAIL:
-        case  UPDATE_PRODUCT_FAIL:
+        case UPDATE_PRODUCT_FAIL:
           return {
             ...state,
             loading: false,
@@ -189,12 +196,79 @@ const productSlice = createSlice({
             loading: false,
             isDeleted: false,
           };
-          case UPDATE_PRODUCT_RESET:
-            return {
-              ...state,
-              loading: false,
-              isUpdated: false,
-            };
+        case UPDATE_PRODUCT_RESET:
+          return {
+            ...state,
+            loading: false,
+            isUpdated: false,
+          };
+        case CLEAR_ERRORS:
+          return {
+            ...state,
+            error: null,
+          };
+        default: {
+          return state;
+        }
+      }
+    },
+    productReviews: (state, action) => {
+      switch (action.payload.type) {
+        case ALL_REVIEW_REQUEST:
+          return {
+            ...state,
+            loading: true,
+            reviews: []
+          }
+        case ALL_REVIEW_SUCCESS:
+          return {
+            ...state,
+            loading: false,
+            reviews: action.payload.data.reviews,
+          }
+        case ALL_REVIEW_FAIL:
+          return {
+            ...state,
+            loading: false,
+            error: action.payload.error,
+          }
+        case CLEAR_ERRORS:
+          return {
+            ...state,
+            error: null
+          }
+        default: {
+          return state;
+        }
+      }
+
+    },
+    updateDeleteReviews: (state, action) => {
+      switch (action.payload.type) {
+        case DELETE_REVIEW_REQUEST:
+          return {
+            ...state,
+            loading: true,
+          };
+        case DELETE_REVIEW_SUCCESS:
+          return {
+            ...state,
+            loading: false,
+            isDeleted: action.payload.data.success,
+          };
+        case DELETE_REVIEW_FAIL:
+          return {
+            ...state,
+            isDeleted:false,
+            loading: false,
+            error: action.payload.error,
+          };
+        case DELETE_REVIEW_RESET:
+          return {
+            ...state,
+            isDeleted:false,
+            loading: false,
+          };
         case CLEAR_ERRORS:
           return {
             ...state,

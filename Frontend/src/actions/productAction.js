@@ -19,7 +19,13 @@ import {
   DELETE_PRODUCT_SUCCESS,
   UPDATE_PRODUCT_REQUEST,
   UPDATE_PRODUCT_SUCCESS,
-  UPDATE_PRODUCT_FAIL
+  UPDATE_PRODUCT_FAIL,
+  ALL_REVIEW_REQUEST,
+  ALL_REVIEW_SUCCESS,
+  ALL_REVIEW_FAIL,
+  DELETE_REVIEW_REQUEST,
+  DELETE_REVIEW_SUCCESS,
+  DELETE_REVIEW_FAIL
 } from "../constants/productConstant";
 import { productRedux } from "../store/slices/productSlice";
 import { productDetailsRedux } from "../store/slices/productDetailsSlice";
@@ -186,6 +192,46 @@ export const newReview = (reviewData) => async (dispatch) => {
     dispatch(
       productRedux.newReview({
         type: NEW_REVIEW_FAIL,
+        error: error.message,
+      })
+    );
+  }
+};
+
+export const getAllReviews = (id) => async (dispatch) => {
+  try {
+    dispatch(productRedux.productReviews({ type: ALL_REVIEW_REQUEST }));
+    const { data } = await axios.get(`/api/v1/admin/reviews?id=${id}`);
+    dispatch(
+      productRedux.productReviews({
+        type: ALL_REVIEW_SUCCESS,
+        data
+      })
+    );
+  } catch (error) {
+    dispatch(
+      productRedux.productReviews({
+        type: ALL_REVIEW_FAIL,
+        error: error.message,
+      })
+    );
+  }
+};
+
+export const deleteReviews = (reviewId,productId) => async (dispatch) => {
+  try {
+    dispatch(productRedux.updateDeleteReviews({ type: DELETE_REVIEW_REQUEST }));
+    const { data } = await axios.delete(`/api/v1/admin/reviews?id=${reviewId}&productId=${productId}`);
+    dispatch(
+      productRedux.updateDeleteReviews({
+        type: DELETE_REVIEW_SUCCESS,
+        data
+      })
+    );
+  } catch (error) {
+    dispatch(
+      productRedux.updateDeleteReviews({
+        type: DELETE_REVIEW_FAIL,
         error: error.message,
       })
     );

@@ -1,5 +1,40 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { LOGIN_FAIL, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT_SUCCESS, LOGOUT_FAIL, CLEAR_ERRORS, UPDATE_PROFILE_REQUEST, UPDATE_PASSWORD_REQUEST, UPDATE_PASSWORD_SUCCESS, UPDATE_PASSWORD_RESET, UPDATE_PASSWORD_FAIL, UPDATE_PROFILE_SUCCESS, UPDATE_PROFILE_RESET, UPDATE_PROFILE_FAIL, FORGOT_PASSWORD_REQUEST, FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_FAIL,RESET_PASSWORD_SUCCESS,RESET_PASSWORD_REQUEST,RESET_PASSWORD_FAIL } from "../../constants/userConstant";
+import {
+  LOGIN_FAIL,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGOUT_SUCCESS,
+  LOGOUT_FAIL,
+  CLEAR_ERRORS,
+  UPDATE_PROFILE_REQUEST,
+  UPDATE_PASSWORD_REQUEST,
+  UPDATE_PASSWORD_SUCCESS,
+  UPDATE_PASSWORD_RESET,
+  UPDATE_PASSWORD_FAIL,
+  UPDATE_PROFILE_SUCCESS,
+  UPDATE_PROFILE_RESET,
+  UPDATE_PROFILE_FAIL,
+  FORGOT_PASSWORD_REQUEST,
+  FORGOT_PASSWORD_SUCCESS,
+  FORGOT_PASSWORD_FAIL,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_FAIL,
+  ALL_USERS_REQUEST,
+  ALL_USERS_SUCCESS,
+  ALL_USERS_FAIL,
+  USER_DETAILS_REQUEST,
+  USER_DETAILS_SUCCESS,
+  USER_DETAILS_FAIL,
+  UPDATE_USER_REQUEST,
+  DELETE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_FAIL,
+  DELETE_USER_FAIL,
+  UPDATE_USER_RESET,
+  DELETE_USER_RESET,
+  DELETE_USER_SUCCESS,
+} from "../../constants/userConstant";
 
 const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
 const initialState = {
@@ -13,30 +48,40 @@ const initialState = {
     role: "",
   },
   error: null,
-  success:null,
+  success: null,
   message: null,
   loading: false,
   isUpdated: false,
+  isDeleted: false,
+  userDetail:{},
+  users: [],
   isAuthenticated: localStorage.getItem("token") ? true : false,
 };
 
 const userSlice = createSlice({
-  name: 'userSlice',
+  name: "userSlice",
   initialState,
   reducers: {
     abc: (state, action) => {
       switch (action.payload.type) {
         case LOGIN_REQUEST:
+          return {
+            ...state,
+            isAuthenticated: false,
+            loading: true,
+          };
         case UPDATE_PROFILE_REQUEST:
+        case UPDATE_USER_REQUEST:
+        case DELETE_USER_REQUEST:
         case UPDATE_PASSWORD_REQUEST:
           return {
             ...state,
             loading: true,
-            isAuthenticated: false,
             user: {},
           };
         case LOGIN_SUCCESS:
-          const { id, createdAt, email, name, profile, role } = action.payload.data.user;
+          const { id, createdAt, email, name, profile, role } =
+            action.payload.data.user;
           const user = {
             id,
             createdAt,
@@ -45,7 +90,7 @@ const userSlice = createSlice({
             profileUrl: profile[0].url,
             role,
           };
-          const token=action.payload.data.token;
+          const token = action.payload.data.token;
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(user));
           return {
@@ -62,9 +107,19 @@ const userSlice = createSlice({
             isAuthenticated: false,
             user: {},
           };
+
         case LOGIN_FAIL:
+          return {
+            ...state,
+            loading: false,
+            isAuthenticated: false,
+            user: null,
+            error: action.payload.error,
+          };
         case LOGOUT_FAIL:
+        case UPDATE_USER_FAIL:
         case UPDATE_PROFILE_FAIL:
+        case DELETE_USER_FAIL:
         case UPDATE_PASSWORD_FAIL:
           return {
             ...state,
@@ -75,6 +130,7 @@ const userSlice = createSlice({
           };
         case UPDATE_PROFILE_SUCCESS:
         case UPDATE_PASSWORD_SUCCESS:
+        case UPDATE_USER_SUCCESS:
           const updatedUser = {
             id: action.payload.data.user.id,
             token: action.payload.data.user.token,
@@ -91,12 +147,26 @@ const userSlice = createSlice({
             loading: false,
             isUpdated: true,
             user: updatedUser,
+            users:[],
+          };
+        case DELETE_USER_SUCCESS:
+          return {
+            ...state,
+            loading: false,
+            isDeleted: true,
+            message:action.payload.data.message
           };
         case UPDATE_PROFILE_RESET:
         case UPDATE_PASSWORD_RESET:
+        case UPDATE_USER_RESET:
           return {
             ...state,
             isUpdated: false,
+          };
+        case DELETE_USER_RESET:
+          return {
+            ...state,
+            isDeleted: false,
           };
         case CLEAR_ERRORS:
           return {
@@ -145,9 +215,69 @@ const userSlice = createSlice({
         default:
           return state;
       }
-    }
+    },
+    allUsers: (state, action) => {
+      switch (action.payload.type) {
+        case ALL_USERS_REQUEST:
+          return {
+            ...state,
+            loading: true,
+            error: null,
+          };
+        case ALL_USERS_SUCCESS:
+          return {
+            ...state,
+            loading: false,
+            users: action.payload.data.users,
+          };
+        case ALL_USERS_FAIL:
+          return {
+            ...state,
+            loading: false,
+            error: action.payload.error,
+          };
+        case CLEAR_ERRORS:
+          return {
+            ...state,
+            error: null,
+          };
+
+        default:
+          return state;
+      }
+    },
+    userDetails: (state, action) => {
+      switch (action.payload.type) {
+        case USER_DETAILS_REQUEST:
+          return {
+            ...state,
+            loading: true,
+            error: null,
+          };
+        case USER_DETAILS_SUCCESS:
+          return {
+            ...state,
+            loading: false,
+            userDetail: action.payload.data.user,
+          };
+        case USER_DETAILS_FAIL:
+          return {
+            ...state,
+            loading: false,
+            error: action.payload.error,
+          };
+        case CLEAR_ERRORS:
+          return {
+            ...state,
+            error: null,
+          };
+
+        default:
+          return state;
+      }
+    },
   },
 });
 
-export const { abc,forgotPassword } = userSlice.actions;
+export const userRedux = userSlice.actions;
 export default userSlice.reducer;

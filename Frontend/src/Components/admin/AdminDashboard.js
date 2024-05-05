@@ -7,11 +7,18 @@ import MetaData from "../Layouts/MetaData.js";
 import Chart from "chart.js/auto";
 import { useDispatch, useSelector } from "react-redux";
 import { getAdminProducts } from "../../actions/productAction.js";
+import { getAllOrders } from "../../actions/orderAction.js";
+import { getAllUsers } from "../../actions/userAction.js";
 const AdminDashboard = () => {
   const dispatch = useDispatch();
   const { products } = useSelector((state) => state.productSlice);
+  const { orders } = useSelector((state) => state.orderSlice);
+  const { users } = useSelector((state) => state.userSlice);
+
   useEffect(() => {
     dispatch(getAdminProducts());
+    dispatch(getAllOrders());
+    dispatch(getAllUsers());
   }, [dispatch]);
 
   let outOfStock = 0;
@@ -72,14 +79,14 @@ const AdminDashboard = () => {
                 className="w-80 text-center py-20 rounded shadow-md text-2xl bg-fuchsia-100"
               >
                 <p>Orders</p>
-                <p>cmksamn</p>
+                <p>{orders && orders.length}</p>
               </Link>
               <Link
                 to="/admin/users"
                 className="w-80 text-center py-20 rounded shadow-md text-2xl bg-fuchsia-100"
               >
                 <p>Users</p>
-                <p>sckm</p>
+                <p>{users && users.length}</p>
               </Link>
             </div>
             <div className="flex w-full h-80 items-center justify-evenly mt-8">

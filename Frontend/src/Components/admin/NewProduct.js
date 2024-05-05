@@ -15,7 +15,7 @@ import { Form } from "react-router-dom";
 import Swal from "sweetalert2";
 const NewProduct = () => {
     const dispatch = useDispatch();
-    const {  error, success } = useSelector(
+    const { error, success } = useSelector(
         (state) => state.productSlice
     );
     const categories = ["Electrical", "PC", "Laptop", "Tablet"];

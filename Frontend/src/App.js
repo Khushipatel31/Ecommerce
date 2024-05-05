@@ -29,6 +29,9 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { MyOrders } from './Components/Order/MyOrders';
 import Orders from './Components/admin/Orders';
+import Users from './Components/admin/Users';
+import UpdateUser from './Components/admin/UpdateUser';
+import ProductReviews from './Components/admin/ProductReviews';
 
 const App = () => {
 
@@ -147,6 +150,18 @@ const App = () => {
         {
           path:"order/:id",
           element:<ProcessOrder/>
+        },
+        {
+          path:"users",
+          element:<Users/>
+        },
+        {
+          path:"user/:id",
+          element:<UpdateUser/>
+        },
+        {
+          path:"reviews",
+          element:<ProductReviews/>
         }
       ]
 

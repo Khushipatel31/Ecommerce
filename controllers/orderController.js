@@ -1,4 +1,4 @@
-const  Order = require("../model/order");
+const Order = require("../model/order");
 const mongoose = require("mongoose");
 const Product = require("../model/product");
 const { CustomHttpError } = require("../utils/CustomError");
@@ -16,7 +16,7 @@ exports.newOrder = catchAsyncErrors(async (req, res, next) => {
     totalPrice,
   } = req.body;
 
-  const order= await Order.create({
+  const order = await Order.create({
     shippingInfo,
     orderItems,
     paymentInfo,
@@ -24,33 +24,33 @@ exports.newOrder = catchAsyncErrors(async (req, res, next) => {
     taxPrice,
     shippingPrice,
     totalPrice,
-    user:req.user._id,
-    paidAt:Date.now()
+    user: req.user._id,
+    paidAt: Date.now()
   });
 
   console.log(order)
 
   res.status(201).json({
-    success:true,
+    success: true,
     order
   })
 
 });
 
 //get single order
-exports.getSingleOrder=catchAsyncErrors(async(req,res,next)=>{
-  const order=await Order.findById(req.params.id).populate(
+exports.getSingleOrder = catchAsyncErrors(async (req, res, next) => {
+  const order = await Order.findById(req.params.id).populate(
     "user",
     "name email"
   );
   //if we do not write populate then will get user id
   //when we populate i can get from user table ,name and email
 
-  if(!order){
-    return next(new CustomHttpError(404,"Order does not found"));
+  if (!order) {
+    return next(new CustomHttpError(404, "Order does not found"));
   }
   res.status(200).json({
-    success:true,
+    success: true,
     order
   })
 
@@ -58,66 +58,70 @@ exports.getSingleOrder=catchAsyncErrors(async(req,res,next)=>{
 
 
 //get order of logged in user
-exports.myOrders=catchAsyncErrors(async(req,res,next)=>{
-  const orders=await Order.find({user:req.user._id});
-  if(!orders){
-    return next(new CustomHttpError(404,"Order does not found"));
+exports.myOrders = catchAsyncErrors(async (req, res, next) => {
+  const orders = await Order.find({ user: req.user._id });
+  if (!orders) {
+    return next(new CustomHttpError(404, "Order does not found"));
   }
   res.status(200).json({
-    success:true,
+    success: true,
     orders
   })
 
 })
 
 //get all orders
-exports.getAllOrders=catchAsyncErrors(async(req,res,next)=>{
-  const orders= await Order.find();
-  let totalAmount=0;
-  orders.forEach((order)=>{
-    totalAmount+=order.totalPrice;
+exports.getAllOrders = catchAsyncErrors(async (req, res, next) => {
+  const orders = await Order.find();
+  let totalAmount = 0;
+  orders.forEach((order) => {
+    totalAmount += order.totalPrice;
   })
   res.status(200).json({
-    success:true,
+    success: true,
     totalAmount,
     orders
   })
 })
 
 //update order status
-exports.updateOrder=catchAsyncErrors(async(req,res,next)=>{
-  const order= await Order.findById(req.params.id);
-  if(!order){
-    return next(new CustomHttpError(404,"Order does not found"));
+exports.updateOrder = catchAsyncErrors(async (req, res, next) => {
+  const order = await Order.findById(req.params.id);
+  if (!order) {
+    return next(new CustomHttpError(404, "Order does not found"));
   }
-  if(order.orderStatus==="Delivered"){
-    return next(new CustomHttpError(400,"Already delivered the order"));
+  if (order.orderStatus === "Delivered") {
+    return next(new CustomHttpError(400, "Already delivered the order"));
   }
   //when order delivered will decrease quantity in product model
 
-  order.orderItems.forEach(async (o)=>{
-    await updateStock(o.product,o.quantity);
-  })
-  order.orderStatus=req.body.status;
-  if(req.body.status==="Delivered"){
-    order.deliveredAt=Date.now();
+  if (req.body.status === "Shipped") {
+    order.orderItems.forEach(async (o) => {
+      await updateStock(o.product, o.quantity);
+    })
+  }
+
+
+  order.orderStatus = req.body.status;
+  if (req.body.status === "Delivered") {
+    order.deliveredAt = Date.now();
   }
 
   await order.save({
-    validateBeforeSave:false
+    validateBeforeSave: false
   })
 
   res.status(200).json({
-    success:true,
+    success: true,
   })
 })
 
 
-async function updateStock(id,quantity){
-  const product= await Product.findById(id);
-  product.stock-=quantity;
+async function updateStock(id, quantity) {
+  const product = await Product.findById(id);
+  product.stock -= quantity;
   await product.save({
-    validateBeforeSave : false
+    validateBeforeSave: false
   })
 }
 
