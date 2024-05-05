@@ -133,16 +133,16 @@ return (
             <div className="orderCartItems flex w-[80vw] font-normal text-sm orderDetailsCartItem flex-col">
               <Typography
                 style={{ fontSize: "1.5rem" }}
-                className="text-fuchsia-950 underline-offset-2 underline text-base md:text-lg lg:text-xl font-bold  font-roboto"
+                className="text-fuchsia-950 mb-5 underline-offset-2 underline text-base md:text-lg lg:text-xl font-bold  font-roboto"
               >
                 Order Items:
               </Typography>
-              <div className="orderCartItemsContainer">
+              <div className="orderCartItemsContainer max-h-[30rem] mt-10  overflow-y-auto" >
                 { orderDetail && orderDetail.orderItems &&
                   orderDetail.orderItems.map((item) => (
                     <div
                       key={item.product}
-                      className=" w-[70vw] flex items-center justify-evenly font-normal text-base md:text-lg lg:text-xl font-roboto "
+                      className=" w-[70vw] mb-3 flex items-center justify-evenly font-normal text-base md:text-lg lg:text-xl font-roboto "
                     >
                       <img src={item.image} className="w-72" alt="Product" />
                       <Link

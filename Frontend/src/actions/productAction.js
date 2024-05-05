@@ -44,7 +44,6 @@ export const getProduct = (keyword = "", currentPage = 1, price = [0, 25000], ca
       }
 
       const { data } = await axios.get(link);
-      console.log(data);
       dispatch(
         productRedux.abc({
           type: ALL_PRODUCT_SUCCESS,
@@ -107,7 +106,7 @@ export const newProduct = (product) => async (dispatch) => {
 
 export const updateProduct = (id, productData) => async (dispatch) => {
   try {
-    dispatch({ type: UPDATE_PRODUCT_REQUEST });
+    dispatch(productRedux.deleteProduct({ type: UPDATE_PRODUCT_REQUEST }));
 
     const config = {
       headers: { "Content-Type": "application/json" },
@@ -155,18 +154,17 @@ export const deleteProduct = (id) => async (dispatch) => {
 
 export const getProductDetails = (id) => async (dispatch) => {
   try {
-    dispatch(productDetailsRedux.detail({ type: PRODUCT_DETAILS_REQUEST }));
+    dispatch(productRedux.detail({ type: PRODUCT_DETAILS_REQUEST }));
     const { data } = await axios.get(`/api/v1/product/${id}`);
     dispatch(
-      productDetailsRedux.detail({
+      productRedux.detail({
         type: PRODUCT_DETAILS_SUCCESS,
         data: data,
       })
     );
   } catch (error) {
-    console.log("this is error");
     dispatch(
-      productDetailsRedux.detail({
+      productRedux.detail({
         type: PRODUCT_DETAILS_FAIL,
         error: error.message,
       })
@@ -201,7 +199,7 @@ export const newReview = (reviewData) => async (dispatch) => {
 export const getAllReviews = (id) => async (dispatch) => {
   try {
     dispatch(productRedux.productReviews({ type: ALL_REVIEW_REQUEST }));
-    const { data } = await axios.get(`/api/v1/admin/reviews?id=${id}`);
+    const { data } = await axios.get(`/api/v1/review?id=${id}`);
     dispatch(
       productRedux.productReviews({
         type: ALL_REVIEW_SUCCESS,
@@ -221,7 +219,7 @@ export const getAllReviews = (id) => async (dispatch) => {
 export const deleteReviews = (reviewId,productId) => async (dispatch) => {
   try {
     dispatch(productRedux.updateDeleteReviews({ type: DELETE_REVIEW_REQUEST }));
-    const { data } = await axios.delete(`/api/v1/admin/reviews?id=${reviewId}&productId=${productId}`);
+    const { data } = await axios.delete(`/api/v1/review?id=${reviewId}&productId=${productId}`);
     dispatch(
       productRedux.updateDeleteReviews({
         type: DELETE_REVIEW_SUCCESS,

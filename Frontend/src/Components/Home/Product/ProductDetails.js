@@ -27,12 +27,10 @@ const ProductDetails = () => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const { id } = useParams();
-  const { success, error: reviewError } = useSelector(
+  const { success, error, loading, product } = useSelector(
     (state) => state.productSlice
   );
-  const { product, loading, error } = useSelector(
-    (state) => state.productDetailsSlice
-  );
+
   const [quantity, setQuantity] = useState(1);
 
   const submitReviewToggle = () => {
@@ -87,26 +85,20 @@ const ProductDetails = () => {
       });
       dispatch(clearErrors(dispatch));
     }
-    if (reviewError) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: `${reviewError}`,
-        footer: '<a href="#">Why do I have this issue?</a>',
-      });
+      
       if (success) {
         Swal.fire({
           icon: "success",
           title: "Review added Successfully",
-          text: `$}`,
           footer: '<a href="#">Why do I have this issue?</a>',
+        }).then(()=>{
+          dispatch({ type: NEW_REVIEW_RESET });
         });
-        dispatch({ type: NEW_REVIEW_RESET });
+        
       }
       dispatch(clearErrors(dispatch));
-    }
     dispatch(getProductDetails(id, dispatch));
-  }, [dispatch, id, error, reviewError, success]);
+  }, [dispatch, id, error, success]);
   return (
     <>
       {loading ? (

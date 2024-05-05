@@ -5,6 +5,7 @@ import {
   clearErrors,
   getAllOrders,
   deleteOrder,
+  myOrders,
 } from "../../actions/orderAction";
 import { Link } from "react-router-dom";
 import { Button, Typography } from "@material-ui/core";
@@ -30,7 +31,7 @@ const Orders = () => {
   } = useSelector((state) => state.orderSlice);
 
   useEffect(() => {
-    dispatch(getAllOrders());
+    dispatch(myOrders());
     if (error) {
       Swal.fire({
         icon: "error",
@@ -66,8 +67,8 @@ const Orders = () => {
       field: "id",
       headerName: "Order ID",
       headerClassName: "text-xl block text-white mx-auto ",
-      minWidth: 300,
-      flex: 0.8,
+      minWidth: 200,
+      flex: 0.5,
     },
     {
       field: "status",
@@ -123,9 +124,6 @@ const Orders = () => {
       },
     },
   ];
-  const getRowClassName = (params) => {
-    return " sm:text-sm md:text-base lg:text-lg ";
-  };
 
   const rows = [];
 

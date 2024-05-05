@@ -63,11 +63,8 @@ const Payment = () => {
         paymentData,
         config
       );
-
       const client_secret = data.client_secret;
-      console.log(client_secret);
       if (!stripe || !elements) return;
-      console.log(shippingInfo);
       const result = await stripe.confirmCardPayment(client_secret, {
         payment_method: {
           card: elements.getElement(CardNumberElement),
@@ -102,9 +99,14 @@ const Payment = () => {
             status: result.paymentIntent.status,
           };
           dispatch(createOrder(order));
-          window.location.replace("/success");
+          Swal.fire({
+            icon: "success",
+            title: "Payment made Successfully",
+            text: ``,
+        }).then(() => {
+            window.location.replace("/success");
+        });
         } else {
-          console.log("this");
           Swal.fire({
             icon: "error",
             title: "Payment error",

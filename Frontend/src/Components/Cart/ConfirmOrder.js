@@ -56,7 +56,6 @@ const ConfirmOrder = () => {
                     </div>
                     <div className="confirmCartItems mt-[3vh]  m-[8vh] py-10 pt-4">
                         <Typography style={{fontSize:"1.5rem"}}  className="text-fuchsia-950 underline-offset-2 underline font-normal text-base md:text-lg lg:text-xl  font-roboto">Your Cart Items:</Typography>
-                        {/* Scrollable cart items container */}
                         <div className="confirmCartItemsContainer mt-8  justify-center self-center  overflow-auto mx-8 h-auto " style={{ maxHeight: '480px', overflowY: 'scroll', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}>
                             {cartItems &&
                                 cartItems.map((item) => (
@@ -78,24 +77,24 @@ const ConfirmOrder = () => {
                     <div className="orderSummary     ">
                         <Typography style={{fontSize:"1.5rem"}}  className=" text-fuchsia-950 text-center font-normal important  border-b border-gray-300 py-4 w-full mx-auto box-border">Order Summary</Typography>
                         <div className="border-b-2 border-t-2">
-                            <div className="flex font-light text-sm md:text-base justify-between ">
+                            <div className="flex  text-sm md:text-base justify-between ">
                                 <p className="font-normal  text-xl  py-4 w-full mx-auto box-border">Subtotal:</p>
-                                <span className="text-gray-700   self-center ">${subTotal}</span>
+                                <span className=" self-center ">₹{subTotal}</span>
                             </div>
-                            <div className="flex font-light text-sm md:text-base justify-between ">
+                            <div className="flex  text-sm md:text-base justify-between ">
                                 <p className=" font-normal text-xl py-4 w-full mx-auto box-border">Shipping Charges:</p>
-                                <span className="text-gray-700   self-center">${shippingCharges}</span>
+                                <span className="   self-center">₹{shippingCharges}</span>
                             </div>
-                            <div className="flex font-light text-sm md:text-base justify-between ">
+                            <div className="flex  text-sm md:text-base justify-between ">
                                 <p className=" font-normal text-xl py-4 w-full mx-auto box-border">GST:</p>
-                                <span className="text-gray-700   self-center">${tax}</span>
+                                <span className="   self-center">₹{tax}</span>
                             </div>
                         </div>
 
                         <div className="orderSummaryTotal">
-                        <div className="flex font-light text-sm md:text-base justify-between ">
+                        <div className="flex  text-sm md:text-base justify-between ">
                                 <p className=" font-normal text-xl py-4 w-full mx-auto box-border">Total:</p>
-                                <span className="text-gray-700   self-center">${totalPrice}</span>
+                                <span className="   self-center">₹{totalPrice}</span>
                             </div>
                         </div>
 

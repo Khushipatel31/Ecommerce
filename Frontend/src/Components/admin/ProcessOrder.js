@@ -19,14 +19,12 @@ const ProcessOrder = () => {
   );
   const dispatch = useDispatch();
   const { id } = useParams();
-
   useEffect(() => {
     if (error) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: `${error}`,
-        footer: '<a href="#">Why do I have this issue?</a>',
       });
       dispatch(clearErrors(dispatch));
     }
@@ -38,6 +36,7 @@ const ProcessOrder = () => {
         confirmButtonText: "OK",
       }).then(() => {
         dispatch({ type: UPDATE_ORDER_RESET });
+        window.location.replace("/admin/orders")
       });
     }
     dispatch(orderDetails(id));
@@ -163,7 +162,6 @@ const ProcessOrder = () => {
                         Your Cart Items:
                       </Typography>
                       <div className="confirmCartItems     pt-4">
-                        {/* Scrollable cart items container */}
                         <div
                           className="confirmCartItemsContainer  p-3 px-8 justify-center self-center  overflow-auto  h-auto "
                           style={{

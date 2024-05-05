@@ -108,9 +108,7 @@ const ProductList = () => {
       },
     },
   ];
-  const getRowClassName = (params) => {
-    return " sm:text-sm md:text-base lg:text-lg ";
-  };
+ 
 
   const rows = [];
 

@@ -23,7 +23,7 @@ export const MyOrders = () => {
       dispatch(clearErrors());
     }
     dispatch(myOrders());
-  }, [dispatch,  error]);
+  }, [dispatch, error]);
   const customStyles = `
   .MuiDataGrid-columnHeader {
     padding: 1vmax !important;
@@ -39,8 +39,8 @@ export const MyOrders = () => {
       field: "id",
       headerName: "Order ID",
       headerClassName: "text-xl block text-white mx-auto ",
-      minWidth: 300,
-      flex: 1,
+      minWidth: 200,
+      flex: 0.8,
     },
     {
       field: "status",
@@ -97,9 +97,7 @@ export const MyOrders = () => {
         amount: item.totalPrice,
       });
     });
-  const getRowClassName = (params) => {
-    return " sm:text-sm md:text-base lg:text-lg ";
-  };
+
 
   return (
     <>
@@ -114,19 +112,23 @@ export const MyOrders = () => {
             className="text-center block text-fuchsia-950  transition-all   "
             style={{ fontSize: "2rem", padding: "1rem" }}
           >
-            {user.name}'s Orders{" "}
+            {orders && orders.length == 0
+              ? "No order found"
+              : ` ${user.name}'s Orders`}
           </Typography>
-          <div className="myOrdersPage w-full px-[7vw] h-[100vh]  flex flex-col  ">
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              pageSize={10}
-              disableSelectionOnClick
-              className="myOrdersTable  bg-white  shadow-md "
-              getRowClassName={getRowClassName}
-              autoHeight
-            />
-          </div>
+          {orders.length != 0 && (
+            <div className="myOrdersPage w-full px-[7vw] h-[100vh]  flex flex-col  ">
+              <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={10}
+                disableSelectionOnClick
+                className="myOrdersTable  bg-white  shadow-md "
+                
+                autoHeight
+              />
+            </div>
+          )}
         </div>
       )}
     </>

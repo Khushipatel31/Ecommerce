@@ -58,7 +58,7 @@ const Cart = () => {
                                             <input className="bg-slate-100 px-3 text-center border-none outline-none  w-16 h-8" type="number" value={item.quantity} readOnly></input>
                                             <button onClick={() => increaseQuantity(item.product, item.quantity, item.stock)} className="px-3  h-8 bg-fuchsia-950 text-white hover:border-fuchsia-950 hover:bg-fuchsia-900 hover:text-white relative  rounded">+</button>
                                         </div>
-                                        <p className="cartSubTotal h-[8vmax] flex justify-end p-1 items-center text-xl px-3  ">{`$${item.price * item.quantity}`}</p>
+                                        <p className="cartSubTotal h-[8vmax] flex justify-end p-1 items-center text-xl px-3  ">{`₹${item.price * item.quantity}`}</p>
                                     </div>
                                 )
                             })
@@ -66,7 +66,7 @@ const Cart = () => {
                         <div className="cartTotal border-t-2 border-fuchsia-950   items-end w-[90%]  flex flex-col mx-auto justify-end ">
                             <div className="TotalBox flex justify-end ">
                                 <p className="flex p-5 text-xl">Gross Total</p>
-                                <p className="flex p-5 text-xl"> {`$${cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)}`}</p>
+                                <p className="flex p-5 text-xl"> {`₹${cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)}`}</p>
                             </div>
                             <button  onClick={checkoutHandler} className=" mt-4 w-40 mr-3  text-lg bg-fuchsia-950 rounded p-2 transition-all text-white hover:bg-fuchsia-900  submitReview">
                                 Check Out

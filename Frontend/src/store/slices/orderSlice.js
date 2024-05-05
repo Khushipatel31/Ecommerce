@@ -26,9 +26,9 @@ const initialState = {
   order: null,
   error: null,
   loading: false,
-  orders: null,
+  orders: [],
   orderDetail: null,
-  isUpdated: null,
+  isUpdated: false,
   isDeleted: null
 };
 

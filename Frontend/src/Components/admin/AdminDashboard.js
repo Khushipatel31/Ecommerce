@@ -29,13 +29,19 @@ const AdminDashboard = () => {
       }
     });
 
+  let totalAmount = 0;
+  orders &&
+    orders.forEach((item) => {
+      totalAmount += item.totalPrice;
+    });
+
   const doughnutState = {
     labels: ["Out of Stock", "InStock"],
     datasets: [
       {
         backgroundColor: ["#00A6B4", "#6800B4"],
         hoverBackgroundColor: ["#4B5000", "#35014F"],
-        data: [outOfStock, products.length-outOfStock],
+        data: [outOfStock, products.length - outOfStock],
       },
     ],
   };
@@ -47,7 +53,7 @@ const AdminDashboard = () => {
         label: "TOTAL AMOUNT",
         backgroundColor: ["tomato"],
         hoverBackgroundColor: ["rgb(197, 72, 49)"],
-        data: [0, 4000],
+        data: [0, totalAmount],
       },
     ],
   };
@@ -63,7 +69,7 @@ const AdminDashboard = () => {
           <div className="dashboardSummary flex items-center w-full flex-col h-[90%] ">
             <div>
               <p className="bg-fuchsia-950 bg-opacity-95 text-white font-light text-center py-6 px-6 w-[83vw]">
-                Total Amount <br /> ₹kjj
+                Total Amount <br /> ₹{totalAmount}
               </p>
             </div>
             <div className="dashboardSummaryBox2 flex justify-evenly items-center w-full mt-8">

@@ -29,7 +29,10 @@ import {
   DELETE_REVIEW_REQUEST,
   DELETE_REVIEW_SUCCESS,
   DELETE_REVIEW_FAIL,
-  DELETE_REVIEW_RESET
+  DELETE_REVIEW_RESET,
+  PRODUCT_DETAILS_REQUEST,
+  PRODUCT_DETAILS_SUCCESS,
+  PRODUCT_DETAILS_FAIL
 } from "../../constants/productConstant";
 const initialState = {
   products: [],
@@ -38,8 +41,8 @@ const initialState = {
   productCount: 0,
   resultPerPage: null,
   filteredProductsCount: 0,
-  success: null,
-  product: null,
+  success: false,
+  product: {},
   isUpdated: null,
   isDeleted: null,
   reviews: []
@@ -107,6 +110,7 @@ const productSlice = createSlice({
             ...state,
             loading: false,
             error: action.payload.error,
+            success:false
           };
         case NEW_REVIEW_RESET:
           return {
@@ -259,14 +263,14 @@ const productSlice = createSlice({
         case DELETE_REVIEW_FAIL:
           return {
             ...state,
-            isDeleted:false,
+            isDeleted: false,
             loading: false,
             error: action.payload.error,
           };
         case DELETE_REVIEW_RESET:
           return {
             ...state,
-            isDeleted:false,
+            isDeleted: false,
             loading: false,
           };
         case CLEAR_ERRORS:
@@ -278,6 +282,38 @@ const productSlice = createSlice({
           return state;
         }
       }
+    },
+    detail: (state, action) => {
+      switch (action.payload.type) {
+        case PRODUCT_DETAILS_REQUEST:
+          return {
+            ...state,
+            loading: true,
+            product: {}
+          }
+        case PRODUCT_DETAILS_SUCCESS:
+          return {
+            ...state,
+            loading: false,
+            product: action.payload.data.product,
+          }
+        case PRODUCT_DETAILS_FAIL:
+          return {
+            ...state,
+            loading: false,
+            error: action.payload.error,
+
+          }
+        case CLEAR_ERRORS:
+          return {
+            ...state,
+            error: null
+          }
+        default: {
+          return state;
+        }
+      }
+
     },
   },
 });
