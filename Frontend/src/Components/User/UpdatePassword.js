@@ -47,12 +47,13 @@ const UpdatePassword = () => {
         if (isUpdated) {
             Swal.fire({
                 icon: "success",
-                title: "Profile Updated Successfully",
-                text: ``,
+                title: "Password Updated Successfully",
                 footer: '<a href="#">Why do I have this issue?</a>'
-            }).then(() => {
-                dispatch({ type: UPDATE_PASSWORD_RESET });
-                window.location.replace("/account");
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dispatch({ type: UPDATE_PASSWORD_RESET });
+                    window.location.replace("/account");
+                }
             });
         }
     }, [dispatch, error, isUpdated])

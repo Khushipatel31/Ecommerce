@@ -10,8 +10,13 @@ import Loader from "../Layouts/Loader/Loader";
 const Swal = require("sweetalert2");
 export const MyOrders = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.userSlice);
+  const { user, error: userError } = useSelector((state) => state.userSlice);
   const { loading, error, orders } = useSelector((state) => state.orderSlice);
+
+  useEffect(() => {
+    dispatch(myOrders());
+  }, [dispatch])
+
   useEffect(() => {
     if (error) {
       Swal.fire({
@@ -19,10 +24,9 @@ export const MyOrders = () => {
         title: "Oops...",
         text: `${error}`,
         footer: '<a href="#">Why do I have this issue?</a>',
-      });
+      })
       dispatch(clearErrors());
     }
-    dispatch(myOrders());
   }, [dispatch, error]);
   const customStyles = `
   .MuiDataGrid-columnHeader {
@@ -124,7 +128,7 @@ export const MyOrders = () => {
                 pageSize={10}
                 disableSelectionOnClick
                 className="myOrdersTable  bg-white  shadow-md "
-                
+
                 autoHeight
               />
             </div>

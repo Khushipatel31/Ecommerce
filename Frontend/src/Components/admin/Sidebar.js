@@ -13,7 +13,7 @@ import RateReviewIcon from "@material-ui/icons/RateReview";
 const Sidebar = () => {
   return (
     <div className="sidebar bg-white flex flex-col py-16 w-64 border border-r-2 border-b-0 ">
-      <Link to="/admin/dashboard" className="text-black  font-light text-sm transition-all duration-500 py-8 px-8 hover:text-tomato transform hover:text-xl">
+      <Link to="/admin" className="text-black  font-light text-sm transition-all duration-500 py-8 px-8 hover:text-tomato transform hover:text-xl">
         <p>
           <DashboardIcon className="inline-block mr-2" /> Dashboard
         </p>

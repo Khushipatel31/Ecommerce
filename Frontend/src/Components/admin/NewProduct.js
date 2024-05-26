@@ -29,8 +29,12 @@ const NewProduct = () => {
                 title: "Oops...",
                 text: `${error}`,
                 footer: '<a href="#">Why do I have this issue?</a>',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dispatch(clearErrors());
+                    window.location.replace("/");
+                }
             });
-            dispatch(clearErrors(dispatch));
         }
         if (success) {
             Swal.fire({
@@ -38,9 +42,11 @@ const NewProduct = () => {
                 title: "Product Created Successfully",
                 text: "You have successfully registered!",
                 confirmButtonText: "OK",
-            }).then(() => {
-                dispatch({ type: NEW_PRODUCT_RESET });
-                window.location.replace("/admin");
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    dispatch({ type: NEW_PRODUCT_RESET });
+                    window.location.replace("/admin");
+                }
             });
         }
     }, [dispatch, error, success]);

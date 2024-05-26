@@ -45,9 +45,11 @@ const UpdateUser = () => {
         title: "User Updated Successfully",
         text: "You have successfully updated user!",
         confirmButtonText: "OK",
-      }).then(() => {
+      }).then((result) => {
+        if (result.isConfirmed) {
         dispatch({ type: UPDATE_USER_RESET });
         window.location.replace("/admin/users");
+        }
       });
     }
     if (user) {

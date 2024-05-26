@@ -32,25 +32,39 @@ const Orders = () => {
 
   useEffect(() => {
     dispatch(myOrders());
+  }, [dispatch])
+
+  useEffect(() => {
     if (error) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: `${error}`,
         footer: '<a href="#">Why do I have this issue?</a>',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(clearErrors());
+          window.location.replace("/");
+        }
       });
-      dispatch(clearErrors());
     }
+  }, [error])
+
+  useEffect(() => {
+
     if (isDeleted) {
       Swal.fire({
         icon: "success",
         title: "Order Deleted Successfully",
         text: "You have successfully deleted order!",
         confirmButtonText: "OK",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch({ type: DELETE_ORDER_RESET });
+        }
       });
-      dispatch({ type: DELETE_ORDER_RESET });
     }
-  }, [dispatch, error, isDeleted]);
+  }, [dispatch, isDeleted]);
 
   const customStyles = `
     .MuiDataGrid-columnHeader {

@@ -21,6 +21,8 @@ import {
   DELETE_ORDER_FAIL,
 } from "../constants/orderConstant";
 import { orderRedux } from "../store/slices/orderSlice";
+import TokenError from "../Components/Error/TokenError";
+
 export const createOrder = (order) => async (dispatch) => {
   try {
     dispatch(orderRedux.createOrder({ type: CREATE_ORDER_REQUEST }));
@@ -30,7 +32,6 @@ export const createOrder = (order) => async (dispatch) => {
       },
     };
     const { data } = await axios.post("/api/v1/order/new", order, config);
-    console.log(data);
     dispatch(
       orderRedux.createOrder({
         type: CREATE_ORDER_SUCCESS,
@@ -38,6 +39,7 @@ export const createOrder = (order) => async (dispatch) => {
       })
     );
   } catch (error) {
+    TokenError(error);
     dispatch(
       orderRedux.createOrder({
         type: CREATE_ORDER_FAIL,
@@ -58,10 +60,11 @@ export const myOrders = () => async (dispatch) => {
       })
     );
   } catch (error) {
+    TokenError(error);
     dispatch(
       orderRedux.myOrders({
         type: MY_ORDER_FAIL,
-        error: error.message,
+        error: error.response.data.message,
       })
     );
   }
@@ -78,6 +81,7 @@ export const getAllOrders = () => async (dispatch) => {
       })
     );
   } catch (error) {
+    TokenError(error);
     dispatch(
       orderRedux.allOrders({
         type: ALL_ORDERS_FAIL,
@@ -108,6 +112,7 @@ export const updateOrder = (id, order) => async (dispatch) => {
       })
     );
   } catch (error) {
+    TokenError(error);
     dispatch(
       orderRedux.updateDeleteOrder({
         type: UPDATE_ORDER_FAIL,
@@ -125,6 +130,7 @@ export const deleteOrder = (id) => async (dispatch) => {
       orderRedux.updateDeleteOrder({ type: DELETE_ORDER_SUCCESS, data })
     );
   } catch (error) {
+    TokenError(error);
     dispatch(
       orderRedux.updateDeleteOrder({
         type: DELETE_ORDER_FAIL,
@@ -136,7 +142,6 @@ export const deleteOrder = (id) => async (dispatch) => {
 
 export const orderDetails = (id) => async (dispatch) => {
   try {
-    console.log("heya");
     dispatch(orderRedux.orderDetails({ type: ORDER_DETAILS_REQUEST }));
     const { data } = await axios.get(`/api/v1/order/${id}`);
     console.log(data);
@@ -147,6 +152,7 @@ export const orderDetails = (id) => async (dispatch) => {
       })
     );
   } catch (error) {
+    TokenError(error);
     dispatch(
       orderRedux.orderDetails({
         type: ORDER_DETAILS_FAIL,
@@ -157,5 +163,5 @@ export const orderDetails = (id) => async (dispatch) => {
 };
 
 export const clearErrors = () => async (dispatch) => {
-  dispatch(createOrder({ type: CLEAR_ERRORS }));
+  dispatch(orderRedux.myOrders({ type: CLEAR_ERRORS }));
 };

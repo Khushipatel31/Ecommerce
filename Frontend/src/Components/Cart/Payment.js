@@ -11,7 +11,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import axios from "axios";
-import { clearErrors,createOrder } from "../../actions/orderAction";
+import { clearErrors, createOrder } from "../../actions/orderAction";
 import CreditCardIcon from "@material-ui/icons/CreditCard";
 import EventIcon from "@material-ui/icons/Event";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
@@ -26,28 +26,64 @@ const Payment = () => {
   const { error } = useSelector((state) => state.orderSlice);
   const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
   const payBtn = useRef(null);
-  const paymentData = {
-    amount: Math.round(orderInfo.totalPrice * 100),
-  };
-  const order = {
-    shippingInfo,
-    orderItems: cartItems,
-    itemsPrice: orderInfo.subtotal,
-    taxPrice: orderInfo.tax,
-    shippingPrice: orderInfo.shippingCharges,
-    totalPrice: orderInfo.totalPrice,
-  };
+  let paymentData = {};
+  let order = {};
   useEffect(() => {
+    if (cartItems.length == 0) {
+      Swal.fire({
+        title: "Oops",
+        text: "Your cart is empty",
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.replace("/")
+        }
+      });
+    }
+    if (orderInfo) {
+      order = {
+        shippingInfo,
+        orderItems: cartItems,
+        itemsPrice: orderInfo.subtotal,
+        taxPrice: orderInfo.tax,
+        shippingPrice: orderInfo.shippingCharges,
+        totalPrice: orderInfo.totalPrice,
+      };
+      paymentData = {
+        amount: Math.round(orderInfo.totalPrice * 100),
+      };
+    }
+    if (!orderInfo) {
+      Swal.fire({
+        title: `${error}`,
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.replace("/")
+        }
+      });
+    }
     if (error) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: `${error}`,
         footer: '<a href="#">Why do I have this issue?</a>',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(clearErrors(dispatch));
+          window.location.replace("/");
+        }
       });
-      dispatch(clearErrors(dispatch));
     }
-  }, [dispatch, error]);
+
+  }, [error]);
+
+
   const submitHandler = async (e) => {
     e.preventDefault();
     payBtn.current.disabled = true;
@@ -102,10 +138,11 @@ const Payment = () => {
           Swal.fire({
             icon: "success",
             title: "Payment made Successfully",
-            text: ``,
-        }).then(() => {
-            window.location.replace("/success");
-        });
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.replace("/success");
+            }
+          });
         } else {
           Swal.fire({
             icon: "error",
@@ -155,7 +192,7 @@ const Payment = () => {
           </div>
           <input
             type="submit"
-            value={`Pay - ₹${orderInfo && orderInfo.totalPrice}`}
+            value="Pay"
             ref={payBtn}
             className="mt-4 w-96 ml-0 self-center text-lg   bg-fuchsia-950 rounded p-2 transition-all text-white hover:bg-fuchsia-900  "
           />

@@ -32,8 +32,12 @@ const Users = () => {
         title: "Oops...",
         text: `${error}`,
         footer: '<a href="#">Why do I have this issue?</a>',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(clearErrors());
+          window.location.replace("/");
+        }
       });
-      dispatch(clearErrors());
     }
     if (isDeleted) {
       Swal.fire({
@@ -41,9 +45,11 @@ const Users = () => {
         title: "User Deleted Successfully",
         text: message,
         confirmButtonText: "OK",
-      }).then(() => {
-        dispatch({ type: DELETE_USER_RESET });
-        window.location.replace("/admin/users");
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch({ type: DELETE_USER_RESET });
+          window.location.replace("/admin/users");
+        }
       });
     }
   }, [dispatch, error, isDeleted]);

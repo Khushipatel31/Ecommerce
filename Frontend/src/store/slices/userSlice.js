@@ -38,15 +38,7 @@ import {
 
 const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
 const initialState = {
-  user: userFromLocalStorage || {
-    id: "",
-    token: "",
-    createdAt: "",
-    email: "",
-    name: "",
-    profileUrl: "",
-    role: "",
-  },
+  user: userFromLocalStorage || null,
   error: null,
   success: null,
   message: null,

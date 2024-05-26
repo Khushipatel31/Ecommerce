@@ -50,16 +50,17 @@ const ProductReviews = () => {
       });
       dispatch(clearErrors());
     }
-    // dispatch(());
     if (isDeleted) {
       Swal.fire({
         icon: "success",
         title: "Review Deleted Successfully",
         text: "You have successfully deleted review!",
         confirmButtonText: "OK",
-      }).then(() => {
+      }).then((result) => {
+        if(result.isConfirmed){
         dispatch({ type: DELETE_REVIEW_RESET });
         window.location.replace("/admin/reviews");
+        }
       });
     }
   }, [dispatch, error, isDeleted,formik.values.productId]);

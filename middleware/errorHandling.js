@@ -5,8 +5,6 @@ const { CustomHttpError } = require("../utils/CustomError");
 
 function errorHandler(err, req, res, next) {
 
-  console.log(err);
-
   err.httpStatusCode=err.httpStatusCode||500;
   err.message=err.message||"Internal error";
 
@@ -24,13 +22,13 @@ function errorHandler(err, req, res, next) {
   //wrong token error
   if(err.name=="JsonWebTokenError"){
     const message=`JSON web token is invalid try again `;
-    err=new CustomHttpError(400,message);
+    err=new CustomHttpError(401,message);
   }
 
   //jwt expire 
   if(err.name=="TokenExpiredError"){
-    const message=`JSON web token is expired try again `;
-    err=new CustomHttpError(400,message);
+    const message=`JSON web token is expired please login again `;
+    err=new CustomHttpError(401,message);
   }
 
  

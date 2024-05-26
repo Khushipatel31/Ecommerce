@@ -34,9 +34,11 @@ const ProcessOrder = () => {
         title: "Order Updated Successfully",
         text: "You have successfully updated order!",
         confirmButtonText: "OK",
-      }).then(() => {
+      }).then((result) => {
+        if(result.isConfirmed){
         dispatch({ type: UPDATE_ORDER_RESET });
         window.location.replace("/admin/orders")
+        }
       });
     }
     dispatch(orderDetails(id));

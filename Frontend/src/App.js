@@ -26,16 +26,40 @@ import NewProduct from "./Components/admin/NewProduct"
 import UpdateProduct from './Components/admin/UpdateProduct';
 import ProcessOrder from './Components/admin/ProcessOrder';
 import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import { MyOrders } from './Components/Order/MyOrders';
 import Orders from './Components/admin/Orders';
 import Users from './Components/admin/Users';
 import UpdateUser from './Components/admin/UpdateUser';
 import ProductReviews from './Components/admin/ProductReviews';
+import { loadStripe } from '@stripe/stripe-js';
+import Swal from 'sweetalert2';
+import TokenError from './Components/Error/TokenError';
 
 const App = () => {
-
   const [stripeApiKey, setStripeApiKey] = useState("");
+  const getStripeApiKey = async () => {
+    try {
+      const response = await axios.get("/api/v1/stripeapikey");
+      setStripeApiKey(response.data.stripeApiKey);
+      return stripeApiKey
+    } catch (error) {
+      if (error) {
+        TokenError(error);
+        Swal.fire({
+          title: `${error.message}`,
+          text: "oops something went wrong!",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "OK"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.replace("/")
+          }
+        });
+      }
+    }
+    return stripeApiKey;
+  }
   const routes = createBrowserRouter([
     {
       path: "/",
@@ -104,6 +128,7 @@ const App = () => {
         },
         {
           path: "/process/payment",
+          loader: getStripeApiKey,
           element: (
             <Elements stripe={loadStripe(stripeApiKey)}>
               <Payment />
@@ -123,7 +148,7 @@ const App = () => {
           element: <OrderDetails />
         },
       ]
-    },{
+    }, {
       path: "/admin",
       element: <Dashboard />,
       children: [
@@ -144,38 +169,35 @@ const App = () => {
           element: <UpdateProduct />
         },
         {
-          path:"orders",
-          element:<Orders/>
+          path: "orders",
+          element: <Orders />
         },
         {
-          path:"order/:id",
-          element:<ProcessOrder/>
+          path: "order/:id",
+          element: <ProcessOrder />
         },
         {
-          path:"users",
-          element:<Users/>
+          path: "users",
+          element: <Users />
         },
         {
-          path:"user/:id",
-          element:<UpdateUser/>
+          path: "user/:id",
+          element: <UpdateUser />
         },
         {
-          path:"reviews",
-          element:<ProductReviews/>
+          path: "reviews",
+          element: <ProductReviews />
         }
       ]
 
     }
   ]);
 
-  const getStripeApiKey = async () => {
-    const response = await axios.get("/api/v1/stripeapikey");
-    setStripeApiKey(response.data.stripeApiKey);
-  }
 
-  useEffect(() => {
-    getStripeApiKey();
-  })
+
+
+
+
   return (
     <RouterProvider router={routes}></RouterProvider>
 

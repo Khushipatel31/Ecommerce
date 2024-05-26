@@ -74,9 +74,11 @@ const UpdateProduct = () => {
                 title: "Product Updated Successfully",
                 text: "You have successfully updated product details!",
                 confirmButtonText: "OK",
-            }).then(() => {
+            }).then((result) => {
+                if(result.isConfirmed){
                 dispatch({ type: UPDATE_PRODUCT_RESET });
                 window.location.replace("/admin/products");
+                }
             });
         }
         if (product) {

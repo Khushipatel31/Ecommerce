@@ -59,6 +59,7 @@ exports.getSingleOrder = catchAsyncErrors(async (req, res, next) => {
 
 //get order of logged in user
 exports.myOrders = catchAsyncErrors(async (req, res, next) => {
+  console.log("this")
   const orders = await Order.find({ user: req.user._id });
   if (!orders) {
     return next(new CustomHttpError(404, "Order does not found"));

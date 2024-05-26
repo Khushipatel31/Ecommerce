@@ -49,8 +49,10 @@ const ResetPassword = () => {
         title: "Password Changed Successfully",
         text: `${success}`,
         footer: '<a href="#">Why do I have this issue?</a>',
-      }).then(() => {
+      }).then((result) => {
+        if(result.isConfirmed){
         window.location.replace("/login");
+        }
       });
     }
   }, [dispatch, error, success]);

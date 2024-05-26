@@ -30,6 +30,7 @@ import {
 import { productRedux } from "../store/slices/productSlice";
 import { productDetailsRedux } from "../store/slices/productDetailsSlice";
 import Swal from "sweetalert2";
+import TokenError from "../Components/Error/TokenError";
 
 export const getProduct = (keyword = "", currentPage = 1, price = [0, 25000], category, rating = 0) =>
   async (dispatch) => {
@@ -71,10 +72,11 @@ export const getAdminProducts = () => async (dispatch) => {
       })
     );
   } catch (error) {
+    TokenError(error);
     dispatch(
       productRedux.abc({
         type: ADMIN_PRODUCT_FAIL,
-        error: error.message,
+        error: error.response.data.message,
       })
     );
   }
@@ -95,6 +97,7 @@ export const newProduct = (product) => async (dispatch) => {
       
     );
   } catch (error) {
+    TokenError(error);
     dispatch(
       productRedux.newProduct({
         type: NEW_PRODUCT_FAIL,
@@ -124,6 +127,7 @@ export const updateProduct = (id, productData) => async (dispatch) => {
       })
     )
   } catch (error) {
+    TokenError(error);
     dispatch(productRedux.deleteProduct({
       type: UPDATE_PRODUCT_FAIL,
       error: error.message,
@@ -142,6 +146,7 @@ export const deleteProduct = (id) => async (dispatch) => {
       })
     );
   } catch (error) {
+    TokenError(error);
     dispatch(
       productRedux.deleteProduct({
         type: DELETE_PRODUCT_FAIL,
@@ -227,10 +232,11 @@ export const deleteReviews = (reviewId,productId) => async (dispatch) => {
       })
     );
   } catch (error) {
+    TokenError(error);
     dispatch(
       productRedux.updateDeleteReviews({
         type: DELETE_REVIEW_FAIL,
-        error: error.message,
+        error: error.response.data.message,
       })
     );
   }

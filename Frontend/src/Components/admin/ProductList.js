@@ -4,11 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   clearErrors,
   getAdminProducts,
-  deleteProduct
+  deleteProduct,
 } from "../../actions/productAction";
 import { Link } from "react-router-dom";
 import { Button, Typography } from "@material-ui/core";
-import MetaData from "../Layouts/MetaData"
+import MetaData from "../Layouts/MetaData";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SideBar from "./Sidebar";
@@ -21,7 +21,12 @@ const ProductList = () => {
     dispatch(deleteProduct(id));
   };
 
-  const { error, products, error: deleteError, isDeleted } = useSelector((state) => state.productSlice);
+  const {
+    error,
+    products,
+    error: deleteError,
+    isDeleted,
+  } = useSelector((state) => state.productSlice);
 
   useEffect(() => {
     if (error) {
@@ -30,20 +35,30 @@ const ProductList = () => {
         title: "Oops...",
         text: `${error}`,
         footer: '<a href="#">Why do I have this issue?</a>',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(clearErrors());
+          window.location.replace("/");
+        }
       });
-      dispatch(clearErrors());
     }
-    dispatch(getAdminProducts());
     if (isDeleted) {
       Swal.fire({
         icon: "success",
         title: "Product Deleted Successfully",
         text: "You have successfully deleted product!",
         confirmButtonText: "OK",
-      })
-      dispatch({ type: DELETE_PRODUCT_RESET });
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch({ type: DELETE_PRODUCT_RESET });
+        }
+      });
     }
-  }, [dispatch, error,deleteError,isDeleted]);
+  }, [dispatch, error, deleteError, isDeleted]);
+
+  useEffect(() => {
+    dispatch(getAdminProducts());
+  }, [dispatch]);
 
   const customStyles = `
   .MuiDataGrid-columnHeader {
@@ -56,7 +71,13 @@ const ProductList = () => {
 `;
 
   const columns = [
-    { field: "id", headerName: "Product ID", headerClassName: "text-xl block text-white mx-auto ", minWidth: 200, flex: 0.5 },
+    {
+      field: "id",
+      headerName: "Product ID",
+      headerClassName: "text-xl block text-white mx-auto ",
+      minWidth: 200,
+      flex: 0.5,
+    },
 
     {
       field: "name",
@@ -97,9 +118,10 @@ const ProductList = () => {
             <Link to={`/admin/product/${params.getValue(params.id, "id")}`}>
               <EditIcon style={{ color: " rgb(74 4 78)" }} />
             </Link>
-            <Button onClick={() =>
-              deleteProductHandler(params.getValue(params.id, "id"))
-            }
+            <Button
+              onClick={() =>
+                deleteProductHandler(params.getValue(params.id, "id"))
+              }
             >
               <DeleteIcon style={{ color: " rgb(74 4 78)" }} />
             </Button>
@@ -108,7 +130,6 @@ const ProductList = () => {
       },
     },
   ];
- 
 
   const rows = [];
 
@@ -144,11 +165,10 @@ const ProductList = () => {
             className="productListTable bg-white w-[80vw] shadow-md "
             autoHeight
           />
-
         </div>
       </div>
     </>
   );
-}
+};
 
-export default ProductList
+export default ProductList;

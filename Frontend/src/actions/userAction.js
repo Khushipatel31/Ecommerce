@@ -89,7 +89,7 @@ export const register = (userdata) => async (dispatch) => {
       text: "You have successfully registered!",
       confirmButtonText: "OK",
     }).then((result) => {
-      if (result.isConfirmed || result.isDismissed) {
+      if (result.isConfirmed) {
         window.location.replace("/login");
       }
     });
@@ -114,12 +114,6 @@ export const updateProfile = (userdata) => async (dispatch) => {
         data: data,
       })
     );
-    Swal.fire({
-      icon: "success",
-      title: "Registration Successful",
-      text: "You have successfully registered!",
-      confirmButtonText: "OK",
-    });
   } catch (error) {
     dispatch(
       userRedux.abc({
@@ -147,7 +141,7 @@ export const updatePassword = (password) => async (dispatch) => {
     );
     Swal.fire({
       icon: "success",
-      title: "Password chenaged",
+      title: "Password changed",
       text: "Your Password Changed Successfully",
       confirmButtonText: "OK",
     });

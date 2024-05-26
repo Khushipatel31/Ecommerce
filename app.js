@@ -1,13 +1,14 @@
 const express = require("express");
 const app=express();
 const cors = require('cors');
+const morgan=require("morgan")
 const dotenv=require("dotenv");
 const bodyParser=require("body-parser");
 const fileUpload=require("express-fileupload");
 dotenv.config();
-app.use(bodyParser.json({ limit: '10mb' })); 
+app.use(morgan("dev"))
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true}));
+app.use(express.urlencoded({ extended: true}));
 app.use(fileUpload());
 const { errorHandler } = require("./middleware/errorHandling");
 const cookieParser=require("cookie-parser");

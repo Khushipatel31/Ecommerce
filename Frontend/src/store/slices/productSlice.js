@@ -97,13 +97,14 @@ const productSlice = createSlice({
         case NEW_REVIEW_REQUEST:
           return {
             ...state,
+            success:false,
             loading: true,
           };
         case NEW_REVIEW_SUCCESS:
           return {
             ...state,
             loading: false,
-            success: action.payload.data.success,
+            success: true,
           };
         case NEW_REVIEW_FAIL:
           return {

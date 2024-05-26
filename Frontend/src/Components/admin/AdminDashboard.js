@@ -8,10 +8,11 @@ import Chart from "chart.js/auto";
 import { useDispatch, useSelector } from "react-redux";
 import { getAdminProducts } from "../../actions/productAction.js";
 import { getAllOrders } from "../../actions/orderAction.js";
-import { getAllUsers } from "../../actions/userAction.js";
+import { clearErrors, getAllUsers } from "../../actions/userAction.js";
+import Swal from "sweetalert2";
 const AdminDashboard = () => {
   const dispatch = useDispatch();
-  const { products } = useSelector((state) => state.productSlice);
+  const { products, error } = useSelector((state) => state.productSlice);
   const { orders } = useSelector((state) => state.orderSlice);
   const { users } = useSelector((state) => state.userSlice);
 
@@ -20,6 +21,22 @@ const AdminDashboard = () => {
     dispatch(getAllOrders());
     dispatch(getAllUsers());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `${error}`,
+        footer: '<a href="#">Why do I have this issue?</a>',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(clearErrors());
+          window.location.replace("/");
+        }
+      });
+    }
+  }, [error]);
 
   let outOfStock = 0;
   products &&
@@ -65,7 +82,6 @@ const AdminDashboard = () => {
         <Sidebar />
 
         <div className="dashboardContainer col-span-2 p-4 w-full">
-
           <div className="dashboardSummary flex items-center w-full flex-col h-[90%] ">
             <div>
               <p className="bg-fuchsia-950 bg-opacity-95 text-white font-light text-center py-6 px-6 w-[83vw]">

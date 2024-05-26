@@ -43,7 +43,6 @@ const ProductDetails = () => {
       comment: comment,
       productId: id,
     };
-    console.log(data);
     dispatch(newReview(data));
     setOpen(false);
   };
@@ -64,10 +63,7 @@ const ProductDetails = () => {
     Swal.fire({
       icon: "success",
       title: "Item Added to Cart Successfully",
-      footer: '<a href="#">Why do I have this issue?</a>',
-    }).then(() => {
-      // window.location.replace("/");
-    });
+    })
   };
   const options = {
     size: "large",
@@ -85,20 +81,23 @@ const ProductDetails = () => {
       });
       dispatch(clearErrors(dispatch));
     }
-      
-      if (success) {
-        Swal.fire({
-          icon: "success",
-          title: "Review added Successfully",
-          footer: '<a href="#">Why do I have this issue?</a>',
-        }).then(()=>{
+
+    if (success) {
+      Swal.fire({
+        icon: "success",
+        title: "Review added Successfully",
+      }).then((result) => {
+        if (result.isConfirmed) {
           dispatch({ type: NEW_REVIEW_RESET });
-        });
-        
-      }
-      dispatch(clearErrors(dispatch));
+        }
+      });
+    }
+    dispatch(clearErrors(dispatch));
     dispatch(getProductDetails(id, dispatch));
   }, [dispatch, id, error, success]);
+  useEffect(()=>{
+    dispatch(getProductDetails(id, dispatch));
+  },[success,dispatch])
   return (
     <>
       {loading ? (

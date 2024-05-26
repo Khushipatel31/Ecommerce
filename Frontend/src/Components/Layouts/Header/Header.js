@@ -108,7 +108,7 @@ const Header = () => {
                       Profile
                     </p>
                   </Link>
-                  <Link to={""} onClick={logoutt}>
+                  <Link to={"/"} onClick={logoutt}>
                     <p className="whitespace-nowrap p-1 cursor-pointer ">
                       Logout
                     </p>
