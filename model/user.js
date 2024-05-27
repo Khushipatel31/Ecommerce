@@ -66,7 +66,6 @@ userSchema.pre("save",async function(next){
 
   
 //JWT generation and storing in cookie
-//for using this function will not use model variable but the object that contains value
 userSchema.methods.getJWTToken =  function() {
   return jwt.sign({id:this._id},process.env.JWT_SECRET,{
     expiresIn: process.env.JWT_EXPIRE
@@ -74,6 +73,7 @@ userSchema.methods.getJWTToken =  function() {
 };
 
 //we use async await for using bcrypt
+//enteredPassword=plainText and this.password=encrypted
 userSchema.methods.comparePassword= async function(enteredPassword) {
   return   await  bcrypt.compare(enteredPassword,this.password);
 };
@@ -82,8 +82,6 @@ userSchema.methods.comparePassword= async function(enteredPassword) {
 //for creating new token for forgot password
 userSchema.methods.getresetPasswordToken=  function() {
     const token=crypto.randomBytes(20).toString("hex");//new token using crypto 
-    console.log("func");
-    console.log(token);
     this.resetPasswordToken=crypto.createHash('sha256').update(token).digest("hex");//using sha256 algorithm and updating hash by token
     this.resetPasswordExpire=Date.now()+60*60*1000;//setting expiry after 15 minutes
     //by using this. the extra properties are added but not saved to database so look at user Controller

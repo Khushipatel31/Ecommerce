@@ -1,9 +1,7 @@
 const express=require("express");
 const userController = require('../controllers/userController');
-const user = require("../model/user");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 const router=express.Router();
-router.route("/verify").get(isAuthenticatedUser);
 router.route("/register").post(userController.registerUser)
 router.route("/login").post(userController.loginUser)
 router.route('/logout').get(userController.logOut);

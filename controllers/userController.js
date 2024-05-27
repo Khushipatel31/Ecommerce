@@ -42,14 +42,9 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
     return next(new CustomHttpError(401, "Invalid Credentials"));
   }
   const isValidPassword = await user.comparePassword(password);
-  console.log("is valid" + isValidPassword);
-  console.log(isValidPassword);
   if (!isValidPassword) {
-    console.log("running");
     return next(new CustomHttpError(401, "Invalid Credentials"));
   }
-  console.log("running");
-
   sendToken(user, 200, res);
 });
 
@@ -61,7 +56,6 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
   }
   //get reset password token
   const resetToken = user.getresetPasswordToken();
-  console.log(resetToken);
   await user.save({ validateBeforeSave: false }); //saving token and expiry of token to database
   const resetPasswordUrl =
     req.protocol + "://" + "localhost:3000" + "/password/reset/" + resetToken;
@@ -85,20 +79,15 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 });
 
 exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
-  console.log(req.body);
-  console.log(req.params.token);
   //firstly we will get the token and convert into hash to check as we have stored hashed token in database while forgot password
   const resetPasswordToken = crypto
     .createHash("sha256")
     .update(req.params.token)
     .digest("hex");
-  console.log(resetPasswordToken);
-  // 96dbf85290aaa4852df7fc42f32fcd6fa672709f
   const user = await User.findOne({
     resetPasswordToken,
     resetPasswordExpire: { $gt: Date.now() },
   });
-  console.log(user);
   if (!user) {
     return next(
       new CustomHttpError(
@@ -183,7 +172,6 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
       width: 150,
       crop: "scale",
     });
-    console.log(myCloud.public_id);
     newUserData.profile = {
       public_id: myCloud.public_id,
       url: myCloud.secure_url,

@@ -290,7 +290,8 @@ const productSlice = createSlice({
           return {
             ...state,
             loading: true,
-            product: {}
+            product: {},
+            success:false
           }
         case PRODUCT_DETAILS_SUCCESS:
           return {

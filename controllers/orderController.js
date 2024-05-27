@@ -1,5 +1,4 @@
 const Order = require("../model/order");
-const mongoose = require("mongoose");
 const Product = require("../model/product");
 const { CustomHttpError } = require("../utils/CustomError");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
@@ -28,8 +27,6 @@ exports.newOrder = catchAsyncErrors(async (req, res, next) => {
     paidAt: Date.now()
   });
 
-  console.log(order)
-
   res.status(201).json({
     success: true,
     order
@@ -43,8 +40,6 @@ exports.getSingleOrder = catchAsyncErrors(async (req, res, next) => {
     "user",
     "name email"
   );
-  //if we do not write populate then will get user id
-  //when we populate i can get from user table ,name and email
 
   if (!order) {
     return next(new CustomHttpError(404, "Order does not found"));
@@ -59,7 +54,6 @@ exports.getSingleOrder = catchAsyncErrors(async (req, res, next) => {
 
 //get order of logged in user
 exports.myOrders = catchAsyncErrors(async (req, res, next) => {
-  console.log("this")
   const orders = await Order.find({ user: req.user._id });
   if (!orders) {
     return next(new CustomHttpError(404, "Order does not found"));
@@ -129,12 +123,10 @@ async function updateStock(id, quantity) {
 //delete order
 exports.deleteOrder = catchAsyncErrors(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
-  console.log(order);
   if (!order) {
     return next(new CustomHttpError(404, "Order not found"));
   }
 
-  // You can use deleteOne() instead of remove() to delete the order
   let response = await Order.deleteOne({ _id: order._id });
   if (response.deletedCount > 0) {
     return res.status(200).json({

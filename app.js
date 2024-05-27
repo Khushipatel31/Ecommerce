@@ -3,13 +3,12 @@ const app=express();
 const cors = require('cors');
 const morgan=require("morgan")
 const dotenv=require("dotenv");
-const bodyParser=require("body-parser");
-const fileUpload=require("express-fileupload");
+// const fileUpload=require("express-fileupload");
 dotenv.config();
 app.use(morgan("dev"))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
-app.use(fileUpload());
+// app.use(fileUpload());
 const { errorHandler } = require("./middleware/errorHandling");
 const cookieParser=require("cookie-parser");
 app.use(cookieParser())
